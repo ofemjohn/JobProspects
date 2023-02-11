@@ -1,4 +1,5 @@
 from config import app
+from routes import user_r
 
 
 @app.route('/')
@@ -7,4 +8,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
