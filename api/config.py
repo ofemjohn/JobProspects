@@ -6,6 +6,3 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/job_prospec
 app.config['SQLALCHEMY_DATABASE_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
-with app.app_context():
-    db.create_all()
