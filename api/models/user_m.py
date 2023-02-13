@@ -12,7 +12,7 @@ class User(db.Model):
     country = db.Column(db.String(50), nullable=False)
     state = db.Column(db.String(50))
     address = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(512), nullable=False)
     date_created = db.Column(db.DateTime(), default=datetime.utcnow)
     last_login = db.Column(db.DateTime, default=datetime.utcnow)
 
