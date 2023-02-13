@@ -19,9 +19,17 @@ class Job(db.Model):
     job_benefits = db.Column(db.Text)
     job_google_link = db.Column(db.String(100))
     job_offer_expiration_datetime_utc = db.Column(db.DateTime())
-    job_required_experience = db.Column(db.Text)
-    job_required_education = db.Column(db.Text)
-    job_highlights = db.Column(db.Text)
+    job_required_experience = db.Column(db.PickleType)
+    job_required_education = db.Column(db.PickleType)
+    job_required_skills = db.Column(db.PickleType)
+    job_highlights = db.Column(db.PickleType)
+    job_salary = db.Column(db.String(10))
+    job_salary_period = db.Column(db.String(10))
+    job_salary_currency = db.Column(db.String(10))
+
+    # TO STORE THE PICKLETYPE
+    # data = {'key1': [1,3,4,6], 'key2': ['a', 'b', 'c]}
+    #job_highlights = data
 
     def to_dict(self):
         return {
@@ -45,5 +53,9 @@ class Job(db.Model):
             "job_required_experience": self.job_required_experience,
             "job_required_education": self.job_required_education,
             "job_highlights": self.job_highlights,
+            "job_required_skills": self.job_required_skills,
+            "job_salary": self.job_salary,
+            "job_salary_period": self.job_salary_period,
+            "job_salary_currency": self.job_salary_currency,
 
         }
