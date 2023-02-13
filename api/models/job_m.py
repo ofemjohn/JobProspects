@@ -1,4 +1,4 @@
-from config import db
+from config import db, app
 
 
 class Job(db.Model):
@@ -57,5 +57,8 @@ class Job(db.Model):
             "job_salary": self.job_salary,
             "job_salary_period": self.job_salary_period,
             "job_salary_currency": self.job_salary_currency,
-
         }
+
+
+with app.app_context():
+    db.create_all()
