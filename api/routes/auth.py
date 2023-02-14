@@ -68,9 +68,9 @@ def login():
 
         access_token = create_access_token(
             identity=user.email)
-        res = jsonify({"message": "Logged in Successfully"})
-        set_access_cookies(res, access_token)
-        return f"{res} token is {access_token}", 200
+        # res = jsonify({"message": "Logged in Successfully"})
+        # set_access_cookies(res, access_token)
+        return f"token is {access_token}", 200
 
     return {"message": "Invalid Password"}, 401
 
