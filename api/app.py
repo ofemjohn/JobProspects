@@ -1,5 +1,8 @@
-from config import app
+from config import app, db
 from routes import user_r, job_r, application_r, auth
+
+with app.app_context():
+    db.create_all()
 
 
 @app.route('/')

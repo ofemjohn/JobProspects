@@ -139,5 +139,30 @@ def register_company():
                         return {"message": "An error occurred while creating the user"}, 500
 
 
-with app.app_context():
-    db.create_all()
+# COMPANY LOGIN
+@app.route('/companies/auth/login', methods=['POST'])
+def company_login():
+    login_data = request.form
+    email = login_data.get('email')
+    password = login_data.get('password')
+
+    # Check if fields not empty
+    if not email or not password:
+        return {"message": "Email or Password is required"}, 204
+    # CHECK IF USER EXISTS
+    company = Companies.query.filter(Companies.company_email == email).first()
+    if not company:
+        return {"message": "Invalid username or password"}, 401
+
+    # CHECK THE PASSWORD
+    if bcrypt.check_password_hash(company.password, password):
+        company.last_login = datetime.utcnow()
+        db.session.commit()
+
+        access_token = create_access_token(
+            identity=company.company_email)
+        # res = jsonify({"message": "Logged in Successfully"})
+        # set_access_cookies(res, access_token)
+        return f"token is {access_token}", 200
+
+    return {"message": "Invalid Password"}, 401

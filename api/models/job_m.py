@@ -12,7 +12,7 @@ class Job(db.Model):
     job_is_remote = db.Column(db.Boolean, nullable=False)
     job_apply_link = db.Column(db.String(255))
     company_id = db.Column(db.Integer, db.ForeignKey(
-        'company.company_id'), nullable=False)
+        'companies.company_id'), nullable=False)
     job_salary = db.Column(db.String(255))
     job_salary_currency = db.Column(db.String(100), nullable=False)
     job_salary_period = db.Column(db.String(100))
@@ -27,9 +27,9 @@ class Job(db.Model):
     job_required_skills = db.Column(db.PickleType)
     job_benefits = db.Column(db.Text)
 
-    company = db.relationship("Companies", back_populates="job")
+    companies = db.relationship("Companies", back_populates="job", lazy=True)
 
-    Companies.job = db.relationship("job", back_populates="companies")
+    Companies.job = db.relationship("Job", back_populates="companies")
 
     # # TO STORE THE PICKLETYPE
     # # data = {'key1': [1,3,4,6], 'key2': ['a', 'b', 'c]}
@@ -59,7 +59,3 @@ class Job(db.Model):
             "job_posted_date": self.job_posted_date,
 
         }
-
-
-with app.app_context():
-    db.create_all()
