@@ -24,3 +24,6 @@ class Companies(db.Model):
             "last_login": self.last_login,
             "date_created": self.date_created
         }
+
+    with app.app_context():
+        db.create_all()
