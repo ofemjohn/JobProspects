@@ -5,13 +5,15 @@ from datetime import datetime
 
 
 class Application(db.Model):
-    app_id = db.Column(db.Integer, primary_key=True, nullable=False)
+    application_id = db.Column(db.Integer, primary_key=True, nullable=False)
     # FOREIGN KEY AND TABLE RELATIONSHIPS
     user_id = db.Column(db.Integer, db.ForeignKey(
         'user.user_id'), nullable=False)
     job_id = db.Column(db.Integer, db.ForeignKey('job.job_id'), nullable=False)
-    app_date = db.Column(db.DateTime(), default=datetime.utcnow)
-    app_status = db.Column(db.String(50))
+    application_cover_letter = db.Column(db.Text)
+    application_resume_url = db.Column(db.String(512), nullable=False)
+    application_status = db.Column(db.String(50))
+    application_date = db.Column(db.DateTime(), default=datetime.utcnow)
 
     user = db.relationship("User", back_populates="application")
     job = db.relationship("Job", back_populates="application")
@@ -20,6 +22,17 @@ class Application(db.Model):
         "Application", back_populates="user")
     Job.application = db.relationship(
         "Application", back_populates="job")
+
+    def to_dict(self):
+        return {
+            "application_id": self.application_id,
+            "job_id": self.job_id,
+            "user_id": self.user_id,
+            "application_cover_letter": self.application_cover_letter,
+            "application_resume_url": self.application_resume_url,
+            "application_status": self.application_status,
+            "application_date": self.application_date,
+        }
 
 
 with app.app_context():
