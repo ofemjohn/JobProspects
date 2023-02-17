@@ -1,0 +1,52 @@
+
+''' job posting routes '''
+@app.route('/job', methods=[POST]):
+def create_job():
+    job_data = request.form
+    job_title = job_data.get('job_title')
+    employment_type = job_data.get('employment_type')
+    job_description = job_data.get('job_description')
+    job_is_remote = job_data.get('job_is_remote')
+    job_apply_link = job_data.get('job_apply_link')
+    company_id = job_data.get('company_id')
+    job_salary = job_data.get('job_salary')
+    job_salary_currency = job_data.get('job_salary_currency')
+    job_salary_period = job_data.get('job_salary_period')
+    job_city = job_data.get('job_city')
+    job_country = job_data.get('job_country')
+    job_status = job_data.get('job_status')
+    apply_by = datetime.strptime(job_data.get('apply_by'), '%Y-%m-%d') if job_data.get('apply_by') else None
+    external_apply_links =job_data.get('external_apply_links')
+    job_required_experience = job_data.get('job_required_experience')
+    job_required_education =job_data.get('job_required_education')
+    job_required_skills =job_data.get('job_required_skills')
+    job_benefits =job_data.get('job_benefits')
+
+
+
+    job = Job(
+        job_title=job_title,
+        employment_type=employment_type,
+        job_description=job_description,
+        job_is_remote=job_posted_date = job_data.get('job_posted_date')job_is_remote,
+        job_apply_link=job_apply_link,
+        company_id=company_id,
+        job_salary=job_salary,
+        job_salary_currency=job_salary_currency,
+        job_salary_period=job_salary_period,
+        job_city=job_city,
+        job_country=job_country,
+        job_status=job_status,
+        apply_by=apply_by,
+        external_apply_links=external_apply_links,
+        job_required_experience=job_required_experience,
+        job_required_education=job_required_education,
+        job_required_skills=job_required_skills,
+        job_benefits=job_benefits
+    )
+
+
+    db.session.add(job)
+    db.session.commit()
+
+    return jsonify({"message": "Job post added succesfully"}), 201

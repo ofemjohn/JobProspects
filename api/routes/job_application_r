@@ -1,0 +1,31 @@
+
+
+'''job application route'''
+
+app.route('/applictions/application_id/status', methods=[POST])
+def job_application(application_id):
+    '''applies for a job with the inputed parameters below'''
+    user_id = request.form['user_id']
+    application_cover_letter = request.form['application_cover_letter']
+    application_resume_url = request.form['application_resume_url']
+    application_status = 'Pending'
+
+    # check if the job exists
+    job = Job.query.get(job_id)
+    if not job:
+        return jsonify({'message': 'Job not found'}), 404
+
+    # check if the user exists
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    # create a new job application
+    application = Application(user_id=user_id, job_id=job_id, application_cover_letter=application_cover_letter,
+                              application_resume_url=application_resume_url, application_status=application_status)
+
+    # add the job application to the database
+    db.session.add(application)
+    db.session.commit()
+
+    return jsonify({'message': 'Job application submitted successfully'})
