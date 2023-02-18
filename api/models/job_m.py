@@ -9,10 +9,10 @@ class Job(db.Model):
     job_title = db.Column(db.String(100), nullable=False)
     employment_type = db.Column(db.String(50))
     job_description = db.Column(db.Text, nullable=False)
-    job_is_remote = db.Column(db.Boolean, nullable=False)
+    job_is_remote = db.Column(db.Boolean)
     job_apply_link = db.Column(db.String(255))
     company_id = db.Column(db.Integer, db.ForeignKey(
-        'company.company_id'), nullable=False)
+        'companies.company_id'), nullable=False)
     job_salary = db.Column(db.String(255))
     job_salary_currency = db.Column(db.String(100), nullable=False)
     job_salary_period = db.Column(db.String(100))
@@ -26,11 +26,6 @@ class Job(db.Model):
     job_required_education = db.Column(db.PickleType)
     job_required_skills = db.Column(db.PickleType)
     job_benefits = db.Column(db.Text)
-
-    company = db.relationship("Companies", back_populates="job")
-
-    Companies.job = db.relationship("job", back_populates="companies")
-
     # # TO STORE THE PICKLETYPE
     # # data = {'key1': [1,3,4,6], 'key2': ['a', 'b', 'c]}
     # #job_highlights = data

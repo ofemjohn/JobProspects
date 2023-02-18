@@ -1,5 +1,5 @@
 from config import app
-from routes import user_r, job_r, application_r, auth
+from routes import user_r, job_r, application_r, auth, job_search_r
 
 
 @app.route('/')
