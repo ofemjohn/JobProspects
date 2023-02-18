@@ -5,7 +5,8 @@ import os
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/job_prospects'
+# os.environ.get('DATABASE_URL')
 # 'mysql://root:root@localhost/job_prospects'
 # mysql+pymysql://root:56465646@localhost/job_prospects
 app.config['SQLALCHEMY_DATABASE_TRACK_MODIFICATIONS'] = False

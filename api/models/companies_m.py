@@ -14,6 +14,8 @@ class Companies(db.Model):
     date_created = db.Column(db.DateTime(), default=datetime.utcnow)
     last_login = db.Column(db.DateTime, default=datetime.utcnow)
 
+    jobs = db.relationship("Job", backref="companies")
+
     def to_dict(self):
         return {
             "company_id": self.company_id,
@@ -25,3 +27,6 @@ class Companies(db.Model):
             "last_login": self.last_login,
             "date_created": self.date_created
         }
+
+    with app.app_context():
+        db.create_all()
