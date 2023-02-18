@@ -3,7 +3,7 @@ from flask import jsonify, request
 from models.job_m import Job, Companies
 from datetime import datetime
 import logging
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 
 
 @app.route('/jobs', methods=['GET'])
@@ -100,7 +100,9 @@ def job_search():
     location = request.args.get('location')
     job_type = request.args.get('type')
     job_title = request.args.get('title')
-    job_salary = request.args.get('salary')
+    # job_salary = request.args.get('salary')
+    min_salary = request.args.get('min_salary')
+    max_salary = request.args.get('max_salary')
 
     # query the job database for all active jobs
     query = Job.query.filter(Job.job_status == 'open')
@@ -117,8 +119,13 @@ def job_search():
         query = query.filter(Job.employment_type.ilike(f'%{job_type}%'))
     if job_title:
         query = query.filter(Job.job_title.ilike(f'%{job_title}%'))
-    if job_salary:
-        query = query.filter(Job.job_salary >= job_salary)
+    if max_salary and not min_salary:
+        query = query.filter(Job.job_salary >= max_salary)
+    elif min_salary and not max_salary:
+        query = query.filter(Job.job_salary <= min_salary)
+    elif min_salary and max_salary:
+        query = query.filter(
+            and_(Job.job_salary >= min_salary, Job.job_salary <= max_salary))
 
     jobs = query.all()
     if not jobs:
