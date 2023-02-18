@@ -118,8 +118,8 @@ def register_company():
         else:
             if not os.path.exists('file_upload'):
                 os.makedirs('file_upload')
-            componay_logo.save(os.path.join('file_upload', filename))
-            logo_url = os.path.join("file_upload", filename)
+            componay_logo.save(os.path.join('/api/file_upload', filename))
+            logo_url = os.path.join("/api/file_upload", filename)
             if logo_url:
                 pwd_hash = bcrypt.generate_password_hash(
                     password, 5).decode('utf-8')
