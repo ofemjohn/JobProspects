@@ -6,6 +6,7 @@ class Companies(db.Model):
     company_id = db.Column(db.Integer, primary_key=True)
     company_name = db.Column(db.String(255), nullable=False)
     company_email = db.Column(db.String(255), nullable=False, unique=True)
+    user_type = db.Column(db.String(255), nullable=False, default="company")
     company_country = db.Column(db.String(255), nullable=False)
     company_website = db.Column(db.String(255), nullable=False)
     company_logo_url = db.Column(db.String(512))

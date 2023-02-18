@@ -59,7 +59,3 @@ class Job(db.Model):
             "job_posted_date": self.job_posted_date,
 
         }
-
-
-with app.app_context():
-    db.create_all()
