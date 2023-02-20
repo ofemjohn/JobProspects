@@ -20,3 +20,5 @@ class User(db.Model):
     # RETURN A DICTONARY
     def to_dict(self):
         return {'user_id': self.user_id, 'first_name': self.first_name, 'last_name': self.last_name, 'email': self.email, 'phone': self.phone, 'gender': self.gender, 'country': self.country, 'state': self.state, 'address': self.address, 'date_created': self.date_created, 'last_login': self.last_login}
+
+
