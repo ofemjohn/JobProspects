@@ -1,0 +1,14 @@
+.header-container {
+  background-color: #ececec;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 30px;
+  margin-bottom: 20px;
+}
+.logo {
+  font-weight: 900;
+  font-family: "Helvetica Neue";
+  color: #008080;
+  font-size: 28px;
+}

@@ -1,0 +1,23 @@
+.filter-container {
+  display: flex;
+  flex-direction: column;
+}
+.filter-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.filterby-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.filterby-wrapper span {
+  font-size: 17px;
+  font-weight: 700;
+}
+.filter-input {
+  padding: 20px 10px;
+  font-size: 18px;
+  border-radius: 10px;
+}

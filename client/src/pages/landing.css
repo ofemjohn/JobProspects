@@ -1,0 +1,19 @@
+.landing-title {
+  font-size: 22px;
+}
+.search-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* margin-bottom: 20px; */
+}
+.search-input {
+  width: 500px;
+  padding: 20px 10px;
+  border-radius: 10px;
+  font-size: 18px;
+}
+.jobs {
+  display: flex;
+  gap: 20px;
+}
