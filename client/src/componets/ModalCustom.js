@@ -41,7 +41,7 @@ const ModalCustom = ({ open, setOpen, type, setType }) => {
             <CloseIcon sx={{ fontSize: "40px", color: "#008080" }} />
           </IconButton>
           {type === "login" ? (
-            <LoginForm setType={setType} />
+            <LoginForm setType={setType} setOpen={setOpen} />
           ) : (
             <Signup setType={setType} />
           )}

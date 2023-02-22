@@ -52,17 +52,17 @@ def register_user():
 # LOGIN ROUTE
 @app.route('/auth/login', methods=['POST'])
 def login():
-    login_data = request.form
+    login_data = request.json
     email = login_data.get('email')
     password = login_data.get('password')
 
     # Check if fields not empty
     if not email or not password:
-        return {"message": "Email or Password is required"}, 204
+        return jsonify({"message": "Email or Password is required"}), 204
     # CHECK IF USER EXISTS
     user = User.query.filter(User.email == email).first()
     if not user:
-        return {"message": "Invalid username or password"}, 401
+        return jsonify({"message": "Invalid username or password"}), 401
 
     # CHECK THE PASSWORD
     if bcrypt.check_password_hash(user.password, password):
@@ -75,7 +75,7 @@ def login():
         # set_access_cookies(res, access_token)
         return f"token is {access_token}", 200
 
-    return {"message": "Invalid Password"}, 401
+    return jsonify({"message": "Invalid Password"}), 401
 
 # LOGOUT ROUTE
 
