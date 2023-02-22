@@ -3,7 +3,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardHeader,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -11,7 +10,7 @@ import "./jobCard.css";
 
 const JobCard = () => {
   return (
-    <Card sx={{ width: 300, marginTop: "20px" }}>
+    <Card sx={{ width: "100%", marginTop: "20px", backgroundColor: "#ECECEC" }}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Microsoft
@@ -26,7 +25,11 @@ const JobCard = () => {
         </p>
       </CardContent>
       <CardActions>
-        <Button size="medium" variant="outlined">
+        <Button
+          sx={{ display: "flex", alignSelf: "center", width: "100%" }}
+          size="medium"
+          variant="outlined"
+        >
           APPLY
         </Button>
       </CardActions>

@@ -1,10 +1,11 @@
-import { IconButton } from "@mui/material";
+import { IconButton, Paper } from "@mui/material";
 import React from "react";
 
 import "./landing.css";
 import SearchIcon from "@mui/icons-material/Search";
 import Filter from "../componets/filter/Filter";
 import JobCard from "../componets/jobCard/JobCard";
+import { Box } from "@mui/system";
 
 const Landing = () => {
   return (
@@ -23,16 +24,32 @@ const Landing = () => {
         </IconButton>
       </div>
       {/* FILTERS */}
-      <Filter />
+      <Box pb={5}>
+        <Filter />
+      </Box>
       {/* JOBS */}
-      <div className="jobs">
-        <JobCard />
-        <JobCard />
-        <JobCard />
-        <JobCard />
-        <JobCard />
-        <JobCard />
-      </div>
+      <Paper elevation={5}>
+        <Box
+          p={3}
+          // display={{ x }}
+          sx={{
+            display: "grid",
+            columnGap: 3,
+            rowGap: 1,
+            gridTemplateColumns: "repeat(4, 1fr)",
+          }}
+        >
+          <JobCard />
+          <JobCard />
+          <JobCard />
+          <JobCard />
+          <JobCard />
+          <JobCard />
+        </Box>
+      </Paper>
+      {/* <div className="jobs">
+        
+      </div> */}
     </div>
   );
 };
