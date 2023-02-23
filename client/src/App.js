@@ -6,6 +6,8 @@ import NoMatch from "./pages/NoMatch";
 import Header from "./componets/header/Header";
 import ModalCustom from "./componets/ModalCustom";
 import User from "./pages/job_seekers/User";
+import RegisterPage from "./pages/companies/RegisterPage";
+import CompanyDashboard from "./pages/companies/CompanyDashboard";
 
 function App() {
   const [open, setOpen] = React.useState(false);
@@ -19,6 +21,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/user" element={<User />} />
+        <Route path="/register_company" element={<RegisterPage />} />
+        <Route path="/c_dashboard" element={<CompanyDashboard />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
       {/* FOOTER */}
