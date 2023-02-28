@@ -2,37 +2,19 @@ import { Button, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import "./loginForm.css";
-import Axios from "axios";
-import { Navigate } from "react-router-dom";
+import { useAuth } from "../../auth/AuthProvider";
 
 const LoginForm = ({ setType, setOpen }) => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState({ msg: "", type: "" });
   const handleSubmit = async (e) => {
     e.preventDefault();
-    Headers = {
-      contentType: "application/json",
-    };
-    if (email === "" || password === "") {
-      setMessage({
-        msg: "* All fields are required",
-        type: "error",
-      });
-    }
     try {
-      await Axios.post(
-        "http://127.0.0.1:5000/auth/login",
-        {
-          email: email,
-          password: password,
-        },
-        Headers
-      );
-      <Navigate to="/user" replace={true} />;
-      setOpen(false);
+      await login({ email: email, password: password, setMessage: setMessage });
     } catch (error) {
-      setMessage({ msg: error.response.data.message, type: "error" });
+      console.log(error);
     }
   };
   return (

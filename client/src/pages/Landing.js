@@ -4,7 +4,7 @@ import React from "react";
 import "./landing.css";
 import { Box } from "@mui/system";
 import image from "../assets/images/hero-img.jpg";
-import { Link, redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CustomCarousel from "../componets/CustomCarousel";
 import { useNavigate } from "react-router-dom";
 

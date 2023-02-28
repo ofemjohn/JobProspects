@@ -1,10 +1,12 @@
 import { Button } from "@mui/material";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import ModalCustom from "../ModalCustom";
+import React from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth/AuthProvider";
 import "./navbar.css";
 
 const Navbar = ({ setOpen, setType }) => {
+  const navigate = useNavigate();
+  const { state } = useAuth();
   const handleOpenLogin = () => {
     setOpen(true);
     setType("login");
@@ -27,16 +29,26 @@ const Navbar = ({ setOpen, setType }) => {
               Services
             </Link>
           </li>
-          <li>
-            <Button onClick={handleOpenLogin} variant="outlined">
-              Hire
-            </Button>
-          </li>
-          <li>
-            <Button onClick={handleOpenSignUp} variant="outlined">
-              Looking for a Job?
-            </Button>
-          </li>
+          {state.user !== null ? (
+            <li>
+              <Button onClick={() => navigate("/user")} variant="outlined">
+                Go To profile
+              </Button>
+            </li>
+          ) : (
+            <>
+              <li>
+                <Button onClick={handleOpenLogin} variant="outlined">
+                  Hire
+                </Button>
+              </li>
+              <li>
+                <Button onClick={handleOpenSignUp} variant="outlined">
+                  Looking for a Job?
+                </Button>
+              </li>
+            </>
+          )}
         </ul>
       </div>
       {/* <ModalCustom show={show} setShow={setShow} /> */}

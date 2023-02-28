@@ -8,6 +8,7 @@ from datetime import datetime
 import os
 from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, unset_jwt_cookies
 import logging
+from flask_cors import cross_origin
 
 bcrypt = Bcrypt()
 jwt = JWTManager(app)
@@ -51,6 +52,7 @@ def register_user():
 
 # LOGIN ROUTE
 @app.route('/auth/login', methods=['POST'])
+@cross_origin()
 def login():
     login_data = request.json
     email = login_data.get('email')
@@ -58,7 +60,7 @@ def login():
 
     # Check if fields not empty
     if not email or not password:
-        return jsonify({"message": "Email or Password is required"}), 204
+        return jsonify({"message": "Email or Password is required"}), 400
     # CHECK IF USER EXISTS
     user = User.query.filter(User.email == email).first()
     if not user:
@@ -71,9 +73,8 @@ def login():
 
         access_token = create_access_token(
             identity=user.email)
-        # res = jsonify({"message": "Logged in Successfully"})
-        # set_access_cookies(res, access_token)
-        return f"token is {access_token}", 200
+
+        return jsonify({"message": "Successfull Login", 'token': access_token,  "user": {"userId": user.user_id, "userType": user.user_type, }}), 200
 
     return jsonify({"message": "Invalid Password"}), 401
 
