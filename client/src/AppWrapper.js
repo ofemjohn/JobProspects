@@ -13,6 +13,11 @@ import Layout from "./componets/Layout";
 import CompanyLayout from "./pages/companies/CompanyLayout";
 import UserLayout from "./pages/job_seekers/UserLayout";
 import UserDashboard from "./pages/job_seekers/UserDashboard";
+import UserProfile from "./pages/job_seekers/UserProfile";
+import UserResume from "./pages/job_seekers/UserResume";
+import AppliedJobs from "./pages/job_seekers/AppliedJobs";
+import UnfinishedJobs from "./pages/job_seekers/UnfinishedJobs";
+import Messages from "./pages/job_seekers/Messages";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -42,7 +47,12 @@ function AppWrapper() {
         {/* JOB SEEKERS ROUTES */}
         <Route element={<PrivateRoute />}>
           <Route element={<UserLayout />}>
-            <Route path="/user" element={<UserDashboard />} />
+            <Route path="/userdashboard" element={<UserDashboard />} />
+            <Route path="/userprofile" element={<UserProfile />} />
+            <Route path="/resume" element={<UserResume />} />
+            <Route path="/appliedjobs" element={<AppliedJobs />} />
+            <Route path="/unfinishedjobs" element={<UnfinishedJobs />} />
+            <Route path="/messages" element={<Messages />} />
           </Route>
         </Route>
       </Routes>
