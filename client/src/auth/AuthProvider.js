@@ -1,68 +1,74 @@
 import Axios from "axios";
-import { createContext, useContext, useEffect, useReducer } from "react";
-import { Navigate } from "react-router-dom";
+import { createContext, useContext, useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 // Define initial state for auth context
-const initialAuthState = {
-  isAuthenticated: false,
-  user: null,
-};
+// const initialAuthState = {
+//   isAuthenticated: false,
+//   user: null,
+// };
 
 // Define auth reducer function
-function authReducer(state, action) {
-  switch (action.type) {
-    case "LOGIN_SUCCESS":
-      return {
-        isAuthenticated: true,
-        user: action.payload.user,
-      };
-    case "LOGIN_ERROR":
-      return {
-        isAuthenticated: false,
-        user: null,
-        error: action.error,
-      };
-    case "LOGOUT":
-      return initialAuthState;
-    default:
-      throw new Error(`Unhandled action type: ${action.type}`);
-  }
-}
+// function authReducer(state, action) {
+//   switch (action.type) {
+//     case "LOGIN_SUCCESS":
+//       return {
+//         isAuthenticated: true,
+//         user: action.payload.user,
+//       };
+//     case "LOGIN_ERROR":
+//       return {
+//         isAuthenticated: false,
+//         user: null,
+//         error: action.error,
+//       };
+//     case "LOGOUT":
+//       Cookies.remove("token"); // remove token cookie
+//       return initialAuthState;
+//     default:
+//       throw new Error(`Unhandled action type: ${action.type}`);
+//   }
+// }
 
 // Create auth context
 const AuthContext = createContext();
 
 // Create auth provider component
 function AuthProvider({ children }) {
-  const [state, dispatch] = useReducer(authReducer, initialAuthState);
+  // const [state, dispatch] = useReducer(authReducer, initialAuthState);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    Cookies.get("isAuthenticated") || false
+  );
 
-  const login = async ({ email, password, setMessage }) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+  // const navigate = useNavigate();
+
+  // CHECK IF USER IS AVAILABLE
+  useEffect(() => {
+    console.log(isAuthenticated);
+    const isAuth = Cookies.get("isAuthenticated");
+    if (isAuth) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, [isAuthenticated]);
+
+  const login = async ({ email, password, setMessage, setOpen }) => {
     try {
-      const response = await Axios.post(
-        "/auth/login",
-        { email: email, password: password },
-        config
-      );
-      console.log(response);
-      if (response.status) {
+      const response = await Axios.post("/auth/login", {
+        email: email,
+        password: password,
+      });
+      console.log("response", response);
+      if (response.status === 200) {
         const data = response.data;
-
-        // Store the user's token and other relevant data in local storage
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", data.user);
-
-        // Set the user as authenticated in the context
-        dispatch({
-          type: "LOGIN_SUCCESS",
-          payload: { user: data.user },
-        });
         setMessage({ msg: data.message, type: "success" });
+        setOpen(false);
+        Cookies.set("isAuthenticated", true);
+        setIsAuthenticated(true);
+        // navigate("/user");
       } else {
         console.log("error");
         throw new Error("Failed to authenticate user");
@@ -70,39 +76,39 @@ function AuthProvider({ children }) {
     } catch (error) {
       setMessage({ msg: `* ${error.response.data.message}`, type: "error" });
       // console.log(error.response.data.message);
-      dispatch({ type: "LOGIN_ERROR", error });
+      // dispatch({ type: "LOGIN_ERROR", error });
     }
     // dispatch({ type: "LOGIN", payload: { user, userType } });
   };
 
-  const logout = () => {
-    // Remove the token and userId from local storage
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    dispatch({ type: "LOGOUT" });
+  // CREATE USER
+  const signUp = async ({ data, setMessage, setType }) => {
+    try {
+      await Axios.post("/auth/register", { ...data });
+      setMessage({ msg: "Registration successful", type: "success" });
+      setTimeout(() => {
+        setType("login");
+      }, 5000);
+    } catch (error) {
+      setMessage({ msg: `* ${error.response.data.message}`, type: "error" });
+      console.log(error.response.data.message);
+    }
   };
 
-  // CHECK IF USER IS AVAILABLE
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    // const user = localStorage.getItem("user");
-
-    if (token) {
-      const decoded = jwt_decode(token);
-      if (decoded.exp < Date.now() / 1000) {
-        // Token has expired, remove it from local storage
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        dispatch({ type: "LOGOUT" });
-      } else {
-        // Token is still valid, set user as authenticated
-        dispatch({ type: "LOGIN_SUCCESS", payload: decoded });
-      }
+  const logout = async () => {
+    try {
+      const response = await Axios.post("/auth/logout");
+      console.log("Logged out successfully", response);
+      Cookies.remove("isAuthenticated");
+      setIsAuthenticated(false);
+    } catch (error) {
+      console.log(error.response.data);
     }
-  }, []);
+    // dispatch({ type: "LOGOUT" });
+  };
 
   return (
-    <AuthContext.Provider value={{ state, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, signUp }}>
       {children}
     </AuthContext.Provider>
   );

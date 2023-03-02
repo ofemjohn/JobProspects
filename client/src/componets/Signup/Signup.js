@@ -1,26 +1,57 @@
 import {
   Box,
   Button,
-  Checkbox,
   FormControl,
   FormControlLabel,
-  FormGroup,
   FormLabel,
   Radio,
   RadioGroup,
   TextField,
 } from "@mui/material";
+import "./signup.css";
 import React, { useState } from "react";
+import { useAuth } from "../../auth/AuthProvider";
 
 const Signup = ({ setType }) => {
-  const [gender, setGender] = useState({
-    male: false,
-    female: false,
+  const { signUp } = useAuth();
+  const [message, setMessage] = useState({ msg: "", type: "" });
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [data, setData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    gender: "",
+    country: "",
+    state: "",
+    address: "",
+    gender: "",
+    password: "",
   });
 
-  const { male, female } = gender;
+  function passwordMatchesConfirmPassword() {
+    return data.password === confirmPassword;
+  }
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const hasAllValues = Object.values(data).every((value) => !!value);
+
+    if (!hasAllValues) {
+      setMessage({ msg: "Ensure all fields are filled", type: "error" });
+      return;
+    }
+    if (!passwordMatchesConfirmPassword()) {
+      setMessage({ msg: "Passwords do not match", type: "error" });
+      return;
+    }
+    try {
+      if (data !== null)
+        await signUp({ data: data, setMessage: setMessage, setType: setType });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Box
       sx={{
@@ -28,11 +59,12 @@ const Signup = ({ setType }) => {
         height: "content-height",
         display: "flex",
         flexDirection: "column",
-        // alignItems: "center",
-        // padding: "0 15px 15px 15px",
       }}
     >
       <h3 style={{ display: "flex", alignSelf: "center" }}>Register</h3>
+      <p className={`${message.type === "error" ? "error" : "success"}`}>
+        {message.msg}
+      </p>
       <form
         style={{
           display: "flex",
@@ -44,17 +76,19 @@ const Signup = ({ setType }) => {
       >
         <Box sx={{ display: "flex", gap: "20px" }}>
           <TextField
-            id="standard-email-input"
+            id="standard-fname"
             sx={{ fontSize: "24px" }}
+            onChange={(e) => setData({ ...data, first_name: e.target.value })}
             label="First Name"
             type="text"
             size="normal"
             variant="standard"
           />
           <TextField
-            id="standard-email-input"
+            id="standard-lname"
             sx={{ fontSize: "24px" }}
             label="Last Name"
+            onChange={(e) => setData({ ...data, last_name: e.target.value })}
             type="text"
             size="normal"
             variant="standard"
@@ -62,16 +96,18 @@ const Signup = ({ setType }) => {
         </Box>
         <Box sx={{ display: "flex", gap: "20px" }}>
           <TextField
-            id="standard-email-input"
+            id="standard-email"
             sx={{ fontSize: "24px" }}
             label="Email"
+            onChange={(e) => setData({ ...data, email: e.target.value })}
             type="email"
             size="normal"
             variant="standard"
           />
           <TextField
-            id="standard-email-input"
+            id="standard-phone"
             sx={{ fontSize: "24px" }}
+            onChange={(e) => setData({ ...data, phone: e.target.value })}
             label="Phone Number"
             type="tel"
             size="normal"
@@ -84,6 +120,7 @@ const Signup = ({ setType }) => {
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               name="radio-buttons-group"
+              onChange={(e) => setData({ ...data, gender: e.target.value })}
             >
               <Box sx={{ display: "flex" }}>
                 <FormControlLabel
@@ -107,17 +144,17 @@ const Signup = ({ setType }) => {
         </Box>
         <Box sx={{ display: "flex", gap: "20px" }}>
           <TextField
-            id="standard-email-input"
             sx={{ fontSize: "24px" }}
             label="Country"
+            onChange={(e) => setData({ ...data, country: e.target.value })}
             type="text"
             size="normal"
             variant="standard"
           />
           <TextField
-            id="standard-email-input"
             sx={{ fontSize: "24px" }}
             label="State"
+            onChange={(e) => setData({ ...data, state: e.target.value })}
             type="text"
             size="normal"
             variant="standard"
@@ -125,7 +162,7 @@ const Signup = ({ setType }) => {
         </Box>
 
         <TextField
-          id="standard-password-input"
+          onChange={(e) => setData({ ...data, address: e.target.value })}
           label="Address"
           type="text"
           autoComplete="current-password"
@@ -136,16 +173,16 @@ const Signup = ({ setType }) => {
         />
         <Box sx={{ display: "flex", gap: "20px" }}>
           <TextField
-            id="standard-email-input"
             sx={{ fontSize: "24px" }}
+            onChange={(e) => setData({ ...data, password: e.target.value })}
             label="Password"
             type="password"
             size="normal"
             variant="standard"
           />
           <TextField
-            id="standard-email-input"
             sx={{ fontSize: "24px" }}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             label="Confirm Password"
             type="password"
             size="normal"
@@ -153,7 +190,9 @@ const Signup = ({ setType }) => {
           />
         </Box>
 
-        <Button variant="outlined">SIGNUP</Button>
+        <Button variant="outlined" onClick={handleSubmit}>
+          SIGNUP
+        </Button>
         <p>
           Already have an account?{" "}
           <button

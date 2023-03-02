@@ -16,3 +16,53 @@
 .card h3 {
   color: blue;
 }
+
+.layout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: 80px;
+}
+.main-layout {
+  width: 100%;
+  top: 80%;
+  min-height: max-contentz;
+  padding: 30px 0;
+}
+
+.sidebar {
+  position: fixed;
+  padding: 20px 0;
+  top: 80px;
+  min-height: calc(100vh - 80px);
+  width: 200px;
+  background-color: #eee;
+  overflow: auto;
+  z-index: 1;
+}
+
+.content {
+  width: calc(100% - 200px);
+  top: 80px;
+  flex: 1;
+  padding: 20px;
+  min-height: calc(100vh - 140px);
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  margin-left: 200px;
+}
+.footer {
+  height: 60px;
+  width: 100%;
+  background-color: #f2f2f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}

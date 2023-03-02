@@ -12,7 +12,12 @@ const LoginForm = ({ setType, setOpen }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login({ email: email, password: password, setMessage: setMessage });
+      await login({
+        email: email,
+        password: password,
+        setMessage: setMessage,
+        setOpen: setOpen,
+      });
     } catch (error) {
       console.log(error);
     }

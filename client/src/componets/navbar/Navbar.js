@@ -6,7 +6,7 @@ import "./navbar.css";
 
 const Navbar = ({ setOpen, setType }) => {
   const navigate = useNavigate();
-  const { state } = useAuth();
+  const { isAuthenticated } = useAuth();
   const handleOpenLogin = () => {
     setOpen(true);
     setType("login");
@@ -29,7 +29,7 @@ const Navbar = ({ setOpen, setType }) => {
               Services
             </Link>
           </li>
-          {state.user !== null ? (
+          {isAuthenticated ? (
             <li>
               <Button onClick={() => navigate("/user")} variant="outlined">
                 Go To profile

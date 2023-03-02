@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/auth/register', methods=['POST'])
 def register_user():
-    user_data = request.form
+    user_data = request.json
     first_name = user_data.get('first_name')
     last_name = user_data.get('last_name')
     email = user_data.get('email')
@@ -30,6 +30,8 @@ def register_user():
     address = user_data.get('address')
     password = user_data.get('password')
 
+    if not first_name or not last_name or not email or not phone or not gender or not country or not state or not address or not password:
+        return jsonify({"message": "All fields should be filled"}), 400
     # encode the password
     pwd_hash = bcrypt.generate_password_hash(password, 5).decode('utf-8')
 
@@ -38,16 +40,16 @@ def register_user():
     try:
         db.session.add(newUser)
         db.session.commit()
-        return {"message": "User created successfully"}, 201
+        return jsonify({"message": "User created successfully"}), 200
     except Exception as e:
         db.session.rollback()
         logging.error(e)
         existing_user = db.session.query(
             User).filter(User.email == email).first()
     if existing_user is not None:
-        return {"message": f'User with email: {email} already exists'}, 409
+        return jsonify({"message": f'User with email: {email} already exists'}), 409
     else:
-        return {"message": "An error occurred while creating the user"}, 500
+        return jsonify({"message": "An error occurred while creating the user"}), 500
 
 
 # LOGIN ROUTE
@@ -70,11 +72,14 @@ def login():
     if bcrypt.check_password_hash(user.password, password):
         user.last_login = datetime.utcnow()
         db.session.commit()
-
-        access_token = create_access_token(
+        token = create_access_token(
             identity=user.email)
+        response = jsonify({"message": "Successfull Login", "user": {
+                           "userId": user.user_id, "userType": user.user_type, }, "token": token})
 
-        return jsonify({"message": "Successfull Login", 'token': access_token,  "user": {"userId": user.user_id, "userType": user.user_type, }}), 200
+        set_access_cookies(response, token, max_age=3600)
+
+        return response, 200
 
     return jsonify({"message": "Invalid Password"}), 401
 
@@ -82,7 +87,7 @@ def login():
 
 
 @app.route("/auth/logout", methods=["POST"])
-def logout():
+def logout_with_cookies():
     response = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(response)
     return response

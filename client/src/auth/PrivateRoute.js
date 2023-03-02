@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 
 const PrivateRoute = () => {
-  const { state } = useAuth();
-  return state.user !== null ? <Outlet /> : <Navigate to="/" />;
+  const { isAuthenticated } = useAuth();
+  useEffect(() => {
+    console.log(isAuthenticated);
+  }, []);
+  return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default PrivateRoute;
