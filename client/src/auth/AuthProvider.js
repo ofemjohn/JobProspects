@@ -14,6 +14,7 @@ function AuthProvider({ children }) {
   );
   const [userId, setUserId] = useState(Cookies.get("userId") || {});
   const token = localStorage.getItem("token") || null;
+  const user = localStorage.getItem("user") || null;
 
   // const navigate = useNavigate();
 
@@ -48,6 +49,35 @@ function AuthProvider({ children }) {
         Cookies.set("isAuthenticated", true);
         Cookies.set("userId", data.user.userId);
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        setIsAuthenticated(true);
+        setUserId(data.user.userId);
+      } else {
+        console.log("error");
+        throw new Error("Failed to authenticate user");
+      }
+    } catch (error) {
+      setMessage({ msg: `* ${error.response.data.message}`, type: "error" });
+    }
+  };
+
+  // COMPANY LOGIN
+
+  const company_login = async ({ email, password, setMessage, setOpen }) => {
+    try {
+      const response = await Axios.post("/companies/auth/login", {
+        email: email,
+        password: password,
+      });
+      console.log("response", response);
+      if (response.status === 200) {
+        const data = response.data;
+        setMessage({ msg: data.message, type: "success" });
+        setOpen(false);
+        Cookies.set("isAuthenticated", true);
+        Cookies.set("userId", data.user.userId);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
         setIsAuthenticated(true);
         setUserId(data.user.userId);
       } else {
@@ -80,6 +110,7 @@ function AuthProvider({ children }) {
       Cookies.remove("isAuthenticated");
       Cookies.remove("userId");
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
 
       setIsAuthenticated(false);
     } catch (error) {
@@ -90,7 +121,16 @@ function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, userId, token, login, logout, signUp }}
+      value={{
+        isAuthenticated,
+        userId,
+        user,
+        token,
+        company_login,
+        login,
+        logout,
+        signUp,
+      }}
     >
       {children}
     </AuthContext.Provider>

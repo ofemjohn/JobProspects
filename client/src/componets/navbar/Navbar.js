@@ -41,8 +41,13 @@ const Navbar = ({ setOpen, setType }) => {
           ) : (
             <>
               <li>
-                <Button onClick={handleOpenLogin} variant="outlined">
-                  Hire
+                <Button variant="outlined">
+                  <Link
+                    style={{ textDecoration: "none", color: "#008080" }}
+                    to="/register_company"
+                  >
+                    Hire
+                  </Link>
                 </Button>
               </li>
               <li>

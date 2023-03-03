@@ -1,13 +1,29 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import AccessDenied from "../componets/AccessDenied";
 import { useAuth } from "./AuthProvider";
+// import { ROLE } from "./roles";
 
-const PrivateRoute = () => {
-  const { isAuthenticated } = useAuth();
+const PrivateRoute = ({ roles, ...rest }) => {
+  const { isAuthenticated, user } = useAuth();
+
   useEffect(() => {
-    console.log(isAuthenticated);
+    console.log(roles, userHasRequiredRole);
   }, []);
-  return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
+  const parsedUser = typeof user === "string" ? JSON.parse(user) : user;
+
+  const userHasRequiredRole =
+    user && roles.includes(parsedUser.userType) ? true : false;
+
+  if (isAuthenticated && !userHasRequiredRole) {
+    return <AccessDenied />;
+  }
+
+  return <Outlet {...rest} />;
 };
 
 export default PrivateRoute;

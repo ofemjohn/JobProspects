@@ -42,7 +42,7 @@ def get_jobs():
 # POST NEW JOBS
 @app.route('/jobs/post', methods=['POST'])
 def create_job():
-    job_data = request.form
+    job_data = request.json
     job_title = job_data.get('job_title')
     employment_type = job_data.get('employment_type')
     job_description = job_data.get('job_description')
@@ -86,7 +86,7 @@ def create_job():
     db.session.add(job)
     db.session.commit()
 
-    return jsonify({"message": "Job post added succesfully"}), 201
+    return jsonify({"message": "Job post added succesfully"}), 200
 
 
 # FILTER JOBS BY TITL, CITY, COUNTRY, SALARY, ALL JOBS
@@ -103,6 +103,9 @@ def job_search():
     # job_salary = request.args.get('salary')
     min_salary = request.args.get('min_salary')
     max_salary = request.args.get('max_salary')
+
+    # if not location:
+    #     return jsonify({"message": "No location"})
 
     # query the job database for all active jobs
     query = Job.query.filter(Job.job_status == 'open')
@@ -133,6 +136,15 @@ def job_search():
 
     return jsonify([job.to_dict() for job in jobs])
 
+# GET JOBS BY COMPANY ID
+
+
+@app.route('/jobs/company/<int:id>')
+def company_jobs(id):
+    jobs = Job.query.filter(Job.company_id == id).all()
+    if not jobs:
+        return jsonify({"message": "You Company has no jobs currently"})
+    return jsonify([job.to_dict() for job in jobs])
 #     # UPDATE JOBS
 #     # SINGLE JOB
 #     # ALL JOBS

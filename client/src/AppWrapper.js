@@ -20,6 +20,8 @@ import UnfinishedJobs from "./pages/job_seekers/UnfinishedJobs";
 import Messages from "./pages/job_seekers/Messages";
 import { useAuth } from "./auth/AuthProvider";
 import CreateJob from "./pages/companies/CreateJob";
+import { ROLE } from "./auth/roles";
+import JobSearchPage from "./pages/JobSearchPage";
 
 // COOKIE AUTH
 // get all cookies as a semicolon-separated string
@@ -56,11 +58,12 @@ function AppWrapper() {
         <Route element={<Layout setType={setType} setOpen={setOpen} />}>
           <Route path="/" element={<Landing />} exact />
           <Route path="/register_company" element={<RegisterPage />} />
+          <Route path="/jobsearch" element={<JobSearchPage />} />
         </Route>
         <Route path="*" element={<NoMatch />} />
 
         {/* COMPANY ROUTES */}
-        <Route element={<PrivateRoute />}>
+        <Route element={<PrivateRoute roles={[ROLE.company]} />}>
           <Route element={<CompanyLayout />}>
             <Route path="/company" element={<CompanyDashboard />} />
             <Route path="/jobs/post" element={<CreateJob />} />
@@ -68,7 +71,7 @@ function AppWrapper() {
         </Route>
 
         {/* JOB SEEKERS ROUTES */}
-        <Route element={<PrivateRoute />}>
+        <Route element={<PrivateRoute roles={[ROLE.user]} />}>
           <Route element={<UserLayout />}>
             <Route path="/userdashboard" element={<UserDashboard />} />
             <Route path="/userprofile" element={<UserProfile />} />

@@ -1,13 +1,20 @@
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import {
+  Menu as MenuIcon,
+  NotificationsNone,
+  MailOutline,
+  Person,
+} from "@mui/icons-material";
 import React, { useState } from "react";
 import Navbar from "../navbar/Navbar";
-import { NotificationsNone, MailOutline, Person } from "@mui/icons-material";
-
 import "./header.css";
 import { useAuth } from "../../auth/AuthProvider";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { Grid } from "@mui/material";
 
-const Header = ({ setOpen, setType, name, id }) => {
-  const { logout } = useAuth();
+const Header = ({ setOpen, setType, name }) => {
+  const { isAuthenticated, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (e) => {
@@ -16,48 +23,35 @@ const Header = ({ setOpen, setType, name, id }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  return id !== "app" ? (
-    <header className="header">
-      <h1>{name}</h1>
-      <div className="header-icons">
-        <IconButton className="icon-btn">
-          <NotificationsNone sx={{ color: "#fff" }} />
-        </IconButton>
-        <IconButton className="icon-btn">
-          <MailOutline sx={{ color: "#fff" }} />
-        </IconButton>
-        <IconButton
-          className="icon-btn"
-          id="basic-button"
-          aria-controls={open ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-        >
-          <Person sx={{ color: "#fff" }} />
-        </IconButton>
-        <Menu
-          id="menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-        >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
-          <MenuItem onClick={async () => await logout()}>Logout</MenuItem>
-        </Menu>
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  return (
+    <>
+      <div className="header-container">
+        {/* LOGO */}
+        <div className="logo">JOB PROSPECTS</div>
+        {/* NAVBAR */}
+        {isMobile ? (
+          <div className="mobile-nav-container">
+            <IconButton onClick={handleClick}>
+              <MenuIcon sx={{ color: "#fff" }} />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{ "aria-labelledby": "basic-button" }}
+            >
+              <Navbar setOpen={setOpen} setType={setType} />
+            </Menu>
+          </div>
+        ) : (
+          <Navbar setOpen={setOpen} setType={setType} />
+        )}
       </div>
-    </header>
-  ) : (
-    <div className="header-container">
-      {/* LOGO */}
-      <div className="logo">JOB PROSPECTS</div>
-      {/* NAVBAR */}
-      <Navbar setOpen={setOpen} setType={setType} />
-    </div>
+    </>
   );
 };
 

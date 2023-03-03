@@ -39,3 +39,16 @@
 .icon-btn:hover {
   background-color: #008080;
 }
+
+.mobile-nav-container {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-nav-container .MuiIconButton-root {
+  color: #008080;
+}
+
+.mobile-nav-container .MuiMenu-root {
+  margin-top: 40px;
+}
