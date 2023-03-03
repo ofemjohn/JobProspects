@@ -4,54 +4,33 @@ import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-// Define initial state for auth context
-// const initialAuthState = {
-//   isAuthenticated: false,
-//   user: null,
-// };
-
-// Define auth reducer function
-// function authReducer(state, action) {
-//   switch (action.type) {
-//     case "LOGIN_SUCCESS":
-//       return {
-//         isAuthenticated: true,
-//         user: action.payload.user,
-//       };
-//     case "LOGIN_ERROR":
-//       return {
-//         isAuthenticated: false,
-//         user: null,
-//         error: action.error,
-//       };
-//     case "LOGOUT":
-//       Cookies.remove("token"); // remove token cookie
-//       return initialAuthState;
-//     default:
-//       throw new Error(`Unhandled action type: ${action.type}`);
-//   }
-// }
-
 // Create auth context
 const AuthContext = createContext();
 
 // Create auth provider component
 function AuthProvider({ children }) {
-  // const [state, dispatch] = useReducer(authReducer, initialAuthState);
   const [isAuthenticated, setIsAuthenticated] = useState(
     Cookies.get("isAuthenticated") || false
   );
+  const [userId, setUserId] = useState(Cookies.get("userId") || {});
+  const token = localStorage.getItem("token") || null;
 
   // const navigate = useNavigate();
 
   // CHECK IF USER IS AVAILABLE
   useEffect(() => {
-    console.log(isAuthenticated);
     const isAuth = Cookies.get("isAuthenticated");
-    if (isAuth) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
+    if (token !== null) {
+      const decoded = jwt_decode(token);
+      if (decoded.exp < Date.now() / 1000) {
+        // Token has expired, remove it from local state
+        logout();
+      }
+      if (isAuth) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
     }
   }, [isAuthenticated]);
 
@@ -67,18 +46,17 @@ function AuthProvider({ children }) {
         setMessage({ msg: data.message, type: "success" });
         setOpen(false);
         Cookies.set("isAuthenticated", true);
+        Cookies.set("userId", data.user.userId);
+        localStorage.setItem("token", data.token);
         setIsAuthenticated(true);
-        // navigate("/user");
+        setUserId(data.user.userId);
       } else {
         console.log("error");
         throw new Error("Failed to authenticate user");
       }
     } catch (error) {
       setMessage({ msg: `* ${error.response.data.message}`, type: "error" });
-      // console.log(error.response.data.message);
-      // dispatch({ type: "LOGIN_ERROR", error });
     }
-    // dispatch({ type: "LOGIN", payload: { user, userType } });
   };
 
   // CREATE USER
@@ -100,6 +78,9 @@ function AuthProvider({ children }) {
       const response = await Axios.post("/auth/logout");
       console.log("Logged out successfully", response);
       Cookies.remove("isAuthenticated");
+      Cookies.remove("userId");
+      localStorage.removeItem("token");
+
       setIsAuthenticated(false);
     } catch (error) {
       console.log(error.response.data);
@@ -108,7 +89,9 @@ function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, signUp }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, userId, token, login, logout, signUp }}
+    >
       {children}
     </AuthContext.Provider>
   );

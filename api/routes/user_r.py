@@ -14,6 +14,7 @@ def get_users():
 
 
 @app.route('/user/<int:id>', methods=['GET'])
+@jwt_required()
 def get_user(id):
     user = User.query.filter(User.user_id == id).first()
     if not user:

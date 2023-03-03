@@ -2,7 +2,8 @@ import { Avatar, IconButton, Typography } from "@mui/material";
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import "./sidebar.css";
-import { Logout, TravelExplore } from "@mui/icons-material";
+import { TravelExplore } from "@mui/icons-material";
+import Logout from "../Logout";
 
 const SideBar = ({ links }) => {
   return (
@@ -14,7 +15,7 @@ const SideBar = ({ links }) => {
           JOB PROSPECTS
         </div>
         {links.map((link, i) => (
-          <div className="sidebar-links-item">
+          <div key={i} className="sidebar-links-item">
             <NavLink
               className={({ isActive }) =>
                 isActive ? "sidebar-link sidebar-link-active" : "sidebar-link"
@@ -30,7 +31,6 @@ const SideBar = ({ links }) => {
       <div className="sidebar-logout">
         <div className="sidebar-links-item logout-icon">
           <Logout />
-          <p>Logout</p>
         </div>
       </div>
     </div>

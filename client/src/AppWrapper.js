@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Landing from "./pages/Landing";
 import { Route, Routes } from "react-router-dom";
 import NoMatch from "./pages/NoMatch";
@@ -18,14 +18,37 @@ import UserResume from "./pages/job_seekers/UserResume";
 import AppliedJobs from "./pages/job_seekers/AppliedJobs";
 import UnfinishedJobs from "./pages/job_seekers/UnfinishedJobs";
 import Messages from "./pages/job_seekers/Messages";
+import { useAuth } from "./auth/AuthProvider";
+import CreateJob from "./pages/companies/CreateJob";
 
-axios.defaults.headers.post["Content-Type"] = "application/json";
+// COOKIE AUTH
+// get all cookies as a semicolon-separated string
+const cookies = document.cookie;
+
+// split the string into individual cookies
+const cookieArray = cookies.split(";");
+
+// loop through each cookie to find the one you're looking for
+let token;
+cookieArray.forEach((cookie) => {
+  const [name, value] = cookie.trim().split("=");
+  if (name === "token") {
+    token = value;
+  }
+});
 
 function AppWrapper() {
-  //   const { state } = useAuth();
+  const { userId, token } = useAuth();
   const [open, setOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [type, setType] = useState("user");
+
+  useEffect(() => {
+    console.log(cookies);
+  }, []);
+  // SET HEADERS
+  axios.defaults.headers.post["Content-Type"] = "application/json";
+  axios.defaults.headers.post["Authorization"] = `Bearer ${token}`;
+  axios.defaults.headers.get["Authorization"] = `Bearer ${token}`;
 
   return (
     <>
@@ -39,8 +62,8 @@ function AppWrapper() {
         {/* COMPANY ROUTES */}
         <Route element={<PrivateRoute />}>
           <Route element={<CompanyLayout />}>
-            <Route path="/c_dashboard" element={<CompanyDashboard />} />
-            <Route path="/c_jobs" element={<CompanyJobs />} />
+            <Route path="/company" element={<CompanyDashboard />} />
+            <Route path="/jobs/post" element={<CreateJob />} />
           </Route>
         </Route>
 

@@ -1,1 +1,17 @@
+.job-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 16px;
+}
 
+.job-form .full-width {
+  grid-column: 1 / -1;
+}
+
+.job-form .description,
+.job-form .required-experience,
+.job-form .required-education,
+.job-form .required-skills,
+.job-form .benefits {
+  grid-row: span 2;
+}

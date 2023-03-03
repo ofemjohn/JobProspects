@@ -31,7 +31,10 @@ const Navbar = ({ setOpen, setType }) => {
           </li>
           {isAuthenticated ? (
             <li>
-              <Button onClick={() => navigate("/user")} variant="outlined">
+              <Button
+                onClick={() => navigate("/userprofile")}
+                variant="outlined"
+              >
                 Go To profile
               </Button>
             </li>

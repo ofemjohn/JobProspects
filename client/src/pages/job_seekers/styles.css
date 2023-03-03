@@ -23,7 +23,7 @@
 }
 .profile-content {
   width: 85%;
-  padding: 20px;
+  padding: 20px 50px 50px 50px;
   min-height: max-content;
 }
 .basic-right {
