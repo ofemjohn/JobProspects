@@ -2,14 +2,13 @@ import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import AccessDenied from "../componets/AccessDenied";
 import { useAuth } from "./AuthProvider";
-// import { ROLE } from "./roles";
 
 const PrivateRoute = ({ roles, ...rest }) => {
   const { isAuthenticated, user } = useAuth();
 
-  useEffect(() => {
-    console.log(roles, userHasRequiredRole);
-  }, []);
+  // useEffect(() => {
+  //   console.log(roles, userHasRequiredRole);
+  // }, []);
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;

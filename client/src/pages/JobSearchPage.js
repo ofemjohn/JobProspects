@@ -14,10 +14,13 @@ import {
 import { Search } from "@mui/icons-material";
 import Axios from "axios";
 import JobCard from "../componets/JobCard";
+import JobModal from "../componets/JobModal";
 
 const jobTypes = ["Full time", "Part time", "Contract", "Internship"];
 
 function JobSearchPage() {
+  const [selectedJob, setSelectedJob] = useState();
+  const [open, setOpen] = useState(false);
   const [jobs, setJobs] = useState();
   const [location, setLocation] = React.useState("");
   const [jobType, setJobType] = React.useState("");
@@ -69,6 +72,11 @@ function JobSearchPage() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  // close modal
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -158,12 +166,22 @@ function JobSearchPage() {
           <Grid container spacing={2} mt={5}>
             {jobs.map((job) => (
               <Grid item key={job.job_id} xs={12} sm={6} md={3}>
-                <JobCard job={job} />
+                <JobCard
+                  setOpen={setOpen}
+                  setSelectedJob={setSelectedJob}
+                  job={job}
+                />
               </Grid>
             ))}
           </Grid>
         )}
       </Grid>
+      <JobModal
+        open={open}
+        setOpen={setOpen}
+        onClose={handleClose}
+        selectedJob={selectedJob}
+      />
     </Container>
   );
 }

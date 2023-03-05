@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { Card, CardContent, Typography, Button } from "@mui/material";
+import Axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -27,8 +28,21 @@ const truncateDescription = (description) => {
   return truncated;
 };
 
-function JobCard({ job }) {
+function JobCard({ job, setSelectedJob, setOpen }) {
   const classes = useStyles();
+
+  // HANDLE APPLY JOB
+  const handleApply = async (id) => {
+    if (id) {
+      try {
+        const response = await Axios.get(`/jobs/${id}`);
+        setSelectedJob(response.data);
+        setOpen(true);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <Card className={classes.card}>
@@ -44,7 +58,12 @@ function JobCard({ job }) {
           {truncateDescription(job.job_description)}
         </Typography>
       </CardContent>
-      <Button variant="contained" color="primary" className={classes.button}>
+      <Button
+        onClick={() => handleApply(job.job_id)}
+        variant="contained"
+        color="primary"
+        className={classes.button}
+      >
         Apply
       </Button>
     </Card>

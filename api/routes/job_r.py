@@ -108,7 +108,8 @@ def job_search():
     #     return jsonify({"message": "No location"})
 
     # query the job database for all active jobs
-    query = Job.query.filter(Job.job_status == 'open')
+    query = Job.query.filter(
+        Job.job_status == 'open')
 
     # check if location, job_type, job_title and job_salary
     # are in the database based on the inputed args by the user
@@ -146,7 +147,41 @@ def company_jobs(id):
         return jsonify({"message": "You Company has no jobs currently"})
     return jsonify([job.to_dict() for job in jobs])
 #     # UPDATE JOBS
-#     # SINGLE JOB
+#     # SINGLE JOB BY ID
+
+
+@app.route('/jobs/<int:id>')
+def single_job_by_id(id):
+    # Job.query.join(Companies).all()
+    job = Job.query.filter(Job.job_id == id).join(Companies).first()
+    if job:
+        company = Companies.query.filter_by(company_id=job.company_id).first()
+        return jsonify({
+            'job_id': job.job_id,
+            'job_title': job.job_title,
+            'employment_type': job.employment_type,
+            'job_description': job.job_description,
+            'job_is_remote': job.job_is_remote,
+            'job_apply_link': job.job_apply_link,
+            'company_id': company.company_id,
+            'company_name': company.company_name,
+            'company_logo_url': company.company_logo_url,
+            'job_salary': job.job_salary,
+            'job_salary_currency': job.job_salary_currency,
+            'job_salary_period': job.job_salary_period,
+            'job_city': job.job_city,
+            'job_country': job.job_country,
+            'job_status': job.job_status,
+            'apply_by': job.apply_by.isoformat() if job.apply_by else None,
+            'external_apply_links': job.external_apply_links,
+            'job_posted_date': job.job_posted_date.isoformat(),
+            'job_required_experience': job.job_required_experience,
+            'job_required_education': job.job_required_education,
+            'job_required_skills': job.job_required_skills,
+            'job_benefits': job.job_benefits
+        })
+    else:
+        return jsonify({"message": "Job Not Found"}), 404
 #     # ALL JOBS
 #     # FILTER BY JOB TITLE
 #     # FILTER BY CITY
