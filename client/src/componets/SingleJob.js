@@ -1,12 +1,83 @@
 import React, { useState } from "react";
-import { Button, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  Grid,
+  Input,
+  InputLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useAuth } from "../auth/AuthProvider";
+import Axios from "axios";
 
 function SingleJob({ selectedJob, onClose }) {
+  const { user } = useAuth();
+  const [message, setMessage] = useState({
+    type: "",
+    msg: "",
+  });
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [application, setApplication] = useState({
+    name: user ? user.name : "",
+    email: user ? user.email : "",
+    phone: user ? user.phone : "",
+    cover_letter: "",
+    file: "",
+  });
+
+  const handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === "file" ? target.files[0] : target.value;
+    const name = target.name;
+    setApplication({ ...application, [name]: value });
+  };
 
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
   };
+
+  // SUBMIT FUNCTION
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(user.userId);
+    const allValuesPresent = Object.values(application).every(
+      (val) => val !== ""
+    );
+    if (!allValuesPresent) {
+      console.log("All fields should not be empty");
+    } else {
+      const formData = new FormData();
+      console.log("formData", formData);
+      formData.append("job_id", selectedJob.job_id);
+      formData.append("user_id", user.userId);
+      formData.append("cover_letter", application.cover_letter);
+      formData.append("file", application.file);
+
+      console.log("formData After appending", formData);
+
+      // for (const [key, value] of formData.entries()) {
+      //   console.log(key, value);
+      // }
+
+      try {
+        const response = await Axios.post("/jobs/apply", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        if (response.status === 200) {
+          setMessage({ msg: response.data.message, type: "success" });
+        } else {
+          setMessage({ msg: response.data.message, type: "error" });
+        }
+      } catch (error) {
+        setMessage({ msg: error.response.data.message, type: "error" });
+      }
+    }
+  };
+
   const rootStyle = {
     position: "fixed",
     right: 0,
@@ -40,7 +111,7 @@ function SingleJob({ selectedJob, onClose }) {
     <>
       <div style={overlay} onClick={onClose}></div>
       <Grid container style={rootStyle}>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={6}>
           <Typography variant="h4" component="h1" gutterBottom>
             {selectedJob.job_title} - {selectedJob.company_name}
           </Typography>
@@ -93,7 +164,7 @@ function SingleJob({ selectedJob, onClose }) {
             {selectedJob.job_benefits}
           </Typography>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid p={2} item xs={12} md={6}>
           <img
             src={selectedJob.company_logo_url}
             alt={selectedJob.company_name}
@@ -105,18 +176,112 @@ function SingleJob({ selectedJob, onClose }) {
           <Typography variant="body1" gutterBottom>
             {selectedJob.company_description}
           </Typography>
-          <Typography variant="h6" component="h2" gutterBottom>
-            How to apply
-          </Typography>
-          <Typography variant="body1" gutterBottom>
+          {user ? (
+            <Typography variant="h6" component="h2" gutterBottom>
+              FILL THIS FORM TO SEND YOUR APPLICATION
+            </Typography>
+          ) : (
+            <>
+              <Typography variant="h6" component="h2" gutterBottom>
+                To apply for this job,
+                <span>You need to have an account with use first</span>
+              </Typography>{" "}
+              <Button>Login</Button>
+            </>
+          )}
+          {user && (
+            <form onSubmit={handleSubmit} enctype="multipart/form-data">
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={10}>
+                  <TextField
+                    id="name"
+                    fullWidth
+                    onChange={handleInputChange}
+                    name="name"
+                    value={application.name}
+                    label="Name"
+                    placeholder="eg. Brian Murithi"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    id="email"
+                    label="Email"
+                    value={application.email}
+                    onChange={handleInputChange}
+                    name="email"
+                    placeholder="eg. name@mail.com"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    value={application.phone}
+                    id="phone-input"
+                    name="phone"
+                    label="Phone Number"
+                    onChange={handleInputChange}
+                    placeholder="eg. +25412345678"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <FormControl>
+                    <InputLabel shrink id="cv-label">
+                      UPLOAD CV
+                    </InputLabel>
+                    <Input
+                      fullWidth
+                      name="file"
+                      onChange={(e) =>
+                        handleInputChange({
+                          target: {
+                            name: "file",
+                            value: e.target.files[0],
+                          },
+                        })
+                      }
+                      id="file"
+                      disableUnderline
+                      type="file"
+                    />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1">Cover Letter</Typography>
+                  <TextField
+                    fullWidth
+                    id="cover_letter_input"
+                    labelId="cover_letter"
+                    name="cover_letter"
+                    value={application.cover_letter}
+                    onChange={handleInputChange}
+                    multiline
+                    rows={10}
+                    placeholder="eg. Write a cover Letter"
+                  />
+                </Grid>
+                <Grid item xm={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ width: "100%" }}
+                  >
+                    Easy Apply
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+          {/* <Typography variant="body1" gutterBottom>
             To apply, please visit:{" "}
             <a href={selectedJob.job_apply_link}>
               {selectedJob.job_apply_link}
             </a>
+          </Typography> */}
+          <Typography mt={4} variant="subtitle1" className={`${message.type}`}>
+            {message.msg}
           </Typography>
-          {/* <Button variant="contained" sx={{ width: "100%" }}>
-          Easy Apply
-        </Button> */}
         </Grid>
       </Grid>
     </>

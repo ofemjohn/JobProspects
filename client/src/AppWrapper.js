@@ -40,7 +40,7 @@ cookieArray.forEach((cookie) => {
 });
 
 function AppWrapper() {
-  const { userId, token } = useAuth();
+  const { token } = useAuth();
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("user");
 
@@ -57,7 +57,10 @@ function AppWrapper() {
       <Routes>
         <Route element={<Layout setType={setType} setOpen={setOpen} />}>
           <Route path="/" element={<Landing />} exact />
-          <Route path="/register_company" element={<RegisterPage />} />
+          <Route
+            path="/register_company"
+            element={<RegisterPage setOpen={setOpen} setType={setType} />}
+          />
           <Route path="/jobsearch" element={<JobSearchPage />} />
         </Route>
         <Route path="*" element={<NoMatch />} />
@@ -67,6 +70,7 @@ function AppWrapper() {
           <Route element={<CompanyLayout />}>
             <Route path="/company" element={<CompanyDashboard />} />
             <Route path="/jobs/post" element={<CreateJob />} />
+            <Route path="/jobs" element={<CompanyJobs />} />
           </Route>
         </Route>
 

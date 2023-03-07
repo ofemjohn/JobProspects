@@ -65,7 +65,15 @@ const CreateJob = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit} style={{ padding: "20px 40px" }}>
-        <Typography>CREATE A JOB POSTING</Typography>
+        <Typography mb={3}>CREATE A JOB POSTING</Typography>
+        <Typography
+          mb={3}
+          style={
+            message.error === "error" ? { color: "red" } : { color: "green" }
+          }
+        >
+          {message.msg}
+        </Typography>
         <Grid container spacing={3}>
           <Grid item xs={6}>
             <TextField

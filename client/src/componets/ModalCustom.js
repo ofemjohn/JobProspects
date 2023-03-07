@@ -7,6 +7,7 @@ import Signup from "../componets/Signup/Signup";
 import Modal, { modalClasses } from "@mui/material/Modal";
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import CompanyLogin from "./Login/CompanyLogin";
 
 const style = {
   position: "absolute",
@@ -42,8 +43,10 @@ const ModalCustom = ({ open, setOpen, type, setType }) => {
           </IconButton>
           {type === "login" ? (
             <LoginForm setType={setType} setOpen={setOpen} />
-          ) : (
+          ) : type === "signup" ? (
             <Signup setType={setType} />
+          ) : (
+            <CompanyLogin setType={setType} setOpen={setOpen} />
           )}
         </Box>
       </Modal>

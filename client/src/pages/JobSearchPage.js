@@ -8,8 +8,6 @@ import {
   MenuItem,
   Slider,
   Button,
-  Box,
-  Paper,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import Axios from "axios";
@@ -19,9 +17,10 @@ import JobModal from "../componets/JobModal";
 const jobTypes = ["Full time", "Part time", "Contract", "Internship"];
 
 function JobSearchPage() {
+  const [msg, setMsg] = useState("");
   const [selectedJob, setSelectedJob] = useState();
   const [open, setOpen] = useState(false);
-  const [jobs, setJobs] = useState();
+  const [jobs, setJobs] = useState(null);
   const [location, setLocation] = React.useState("");
   const [jobType, setJobType] = React.useState("");
   const [jobTitle, setJobTitle] = React.useState("");
@@ -51,6 +50,11 @@ function JobSearchPage() {
   };
 
   useEffect(() => {
+    fetchJob();
+    console.log(searchParams);
+  }, [searchParams]);
+
+  useEffect(() => {
     setSearchParams({
       type: jobType,
       title: jobTitle,
@@ -60,18 +64,42 @@ function JobSearchPage() {
     });
   }, [jobTitle, jobType, location, salaryRange]);
 
-  const handleSearch = async () => {
-    // handle search logic here
-    console.log(searchParams);
+  const fetchJob = async () => {
     try {
       const response = await Axios.get("/jobs/search", {
         params: searchParams,
       });
-      console.log(response.data);
-      setJobs(response.data);
+      console.log(response);
+      if (response.data.message) {
+        console.log("No jobs found");
+        setJobs(null);
+        setMsg("No Jobs found");
+        return;
+      } else {
+        setJobs(response.data);
+      }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleSearch = async () => {
+    // handle search logic here
+    // console.log(searchParams);
+    // try {
+    //   const response = await Axios.get("/jobs/search", {
+    //     params: searchParams,
+    //   });
+    //   console.log(response);
+    //   if (response.data.message) {
+    //     console.log("No jobs found");
+    //     return;
+    //   } else {
+    //     setJobs(response.data);
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   // close modal
@@ -83,8 +111,8 @@ function JobSearchPage() {
     <Container maxWidth="lg">
       <Grid container spacing={3} justifyContent="center">
         <Grid item xs={12}>
-          <Typography variant="h4" component="h1" align="center">
-            Search Jobs
+          <Typography variant="h4" component="h1" mb={3} align="center">
+            What kind of Job are you looking for?
           </Typography>
         </Grid>
 
@@ -146,35 +174,21 @@ function JobSearchPage() {
           />
         </Grid>
 
-        <Grid item xs={12} md={3}>
-          <Button
-            sx={{
-              padding: "10px 20px",
-              bgcolor: "#008080",
-            }}
-            variant="contained"
-            onClick={handleSearch}
-          >
-            <Search />
-            Search
-          </Button>
-        </Grid>
-
         {/* DISPLAY RESULTS */}
 
-        {jobs && (
-          <Grid container spacing={2} mt={5}>
-            {jobs.map((job) => (
-              <Grid item key={job.job_id} xs={12} sm={6} md={3}>
-                <JobCard
-                  setOpen={setOpen}
-                  setSelectedJob={setSelectedJob}
-                  job={job}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        )}
+        <Grid container spacing={2} mt={5}>
+          {jobs == null
+            ? msg
+            : jobs.map((job) => (
+                <Grid item key={job.job_id} xs={12} sm={6} md={3}>
+                  <JobCard
+                    setOpen={setOpen}
+                    setSelectedJob={setSelectedJob}
+                    job={job}
+                  />
+                </Grid>
+              ))}
+        </Grid>
       </Grid>
       <JobModal
         open={open}

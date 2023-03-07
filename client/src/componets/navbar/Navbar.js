@@ -51,8 +51,24 @@ const Navbar = ({ setOpen, setType }) => {
                 </Button>
               </li>
               <li>
-                <Button onClick={handleOpenSignUp} variant="outlined">
+                {/* <Button onClick={handleOpenSignUp} variant="outlined">
                   Looking for a Job?
+                </Button> */}
+                <Button variant="outlined">
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                      color: "#008080",
+                    }}
+                    to="/jobsearch"
+                  >
+                    Looking for a Job?
+                  </Link>
+                </Button>
+              </li>
+              <li>
+                <Button onClick={handleOpenLogin} variant="contained">
+                  Login
                 </Button>
               </li>
             </>

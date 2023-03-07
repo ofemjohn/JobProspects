@@ -1,9 +1,9 @@
 import { Button, Paper, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const RegisterPage = () => {
+const RegisterPage = ({ setOpen, setType }) => {
   return (
     <>
       <Box
@@ -169,7 +169,16 @@ const RegisterPage = () => {
                 fontSize: "16px",
               }}
             >
-              Already registered? <Link to="#">Login</Link>
+              Already registered?{" "}
+              <Link
+                onClick={() => {
+                  setOpen(true);
+                  setType("company");
+                }}
+                to="#"
+              >
+                Login
+              </Link>
             </Typography>
           </Box>
         </Paper>

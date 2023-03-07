@@ -1,7 +1,6 @@
 import Axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 // Create auth context
@@ -14,7 +13,9 @@ function AuthProvider({ children }) {
   );
   const [userId, setUserId] = useState(Cookies.get("userId") || {});
   const token = localStorage.getItem("token") || null;
-  const user = localStorage.getItem("user") || null;
+  const non_parsed_user = localStorage.getItem("user") || null;
+  const user =
+    typeof non_parsed_user === "string" ? JSON.parse(non_parsed_user) : null;
 
   // const navigate = useNavigate();
 
@@ -69,23 +70,24 @@ function AuthProvider({ children }) {
         email: email,
         password: password,
       });
-      console.log("response", response);
-      if (response.status === 200) {
-        const data = response.data;
-        setMessage({ msg: data.message, type: "success" });
+      console.log(setOpen);
+      if (response.status === 200 && response.data) {
+        const companyData = response.data;
+        setMessage({ msg: companyData.message, type: "success" });
         setOpen(false);
         Cookies.set("isAuthenticated", true);
-        Cookies.set("userId", data.user.userId);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        Cookies.set("userId", companyData.company.companyId);
+        localStorage.setItem("token", companyData.token);
+        localStorage.setItem("user", JSON.stringify(companyData.company));
         setIsAuthenticated(true);
-        setUserId(data.user.userId);
+        setUserId(companyData.company.userId);
       } else {
         console.log("error");
         throw new Error("Failed to authenticate user");
       }
     } catch (error) {
-      setMessage({ msg: `* ${error.response.data.message}`, type: "error" });
+      console.log(error);
+      setMessage({ msg: `* ${error.data}`, type: "error" });
     }
   };
 
@@ -111,7 +113,6 @@ function AuthProvider({ children }) {
       Cookies.remove("userId");
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-
       setIsAuthenticated(false);
     } catch (error) {
       console.log(error.response.data);

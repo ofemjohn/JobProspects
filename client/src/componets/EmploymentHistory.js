@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -15,6 +15,9 @@ import {
   IconButton,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { format } from "date-fns";
 
 const EmploymentHistory = () => {
   const [historyList, setHistoryList] = useState([]);
@@ -34,6 +37,7 @@ const EmploymentHistory = () => {
       endDate: endDate,
     };
     setHistoryList([...historyList, newHistory]);
+
     setName("");
     setPosition("");
     setRoles("");
@@ -48,7 +52,7 @@ const EmploymentHistory = () => {
   };
 
   const handleEdit = (index) => {
-    const history = historyList[index];
+    const history = index;
     setName(history.name);
     setPosition(history.position);
     setRoles(history.roles);
@@ -78,36 +82,38 @@ const EmploymentHistory = () => {
               onChange={(event) => setPosition(event.target.value)}
             />
           </Grid>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Grid item xs={12} sm={6}>
+              <DatePicker
+                name="startDate"
+                value={startDate}
+                onChange={(newValue) => {
+                  setStartDate(newValue);
+                }}
+                label="Start Date"
+                renderInput={(params) => <TextField {...params} fullWidth />}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <DatePicker
+                name="endDate"
+                value={endDate}
+                onChange={(newValue) => {
+                  setEndDate(newValue);
+                }}
+                label="End Date"
+                renderInput={(params) => <TextField {...params} fullWidth />}
+              />
+            </Grid>
+          </LocalizationProvider>
           <Grid item xs={12}>
             <TextField
+              multiline
+              rows={10}
               fullWidth
               label="Roles and responsibilities"
               value={roles}
               onChange={(event) => setRoles(event.target.value)}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Start Date"
-              type="date"
-              value={startDate}
-              onChange={(event) => setStartDate(event.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="End Date"
-              type="date"
-              value={endDate}
-              onChange={(event) => setEndDate(event.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -138,12 +144,16 @@ const EmploymentHistory = () => {
               {historyList.map((history, index) => (
                 <TableRow key={index}>
                   <TableCell component="th" scope="row">
-                    {history.organization}
+                    {history.name}
                   </TableCell>
                   <TableCell align="center">{history.position}</TableCell>
                   <TableCell align="center">{history.roles}</TableCell>
-                  <TableCell align="center">{history.dateStarted}</TableCell>
-                  <TableCell align="center">{history.dateEnded}</TableCell>
+                  <TableCell align="center">
+                    {format(history.startDate, "dd/MM/yyyy")}
+                  </TableCell>
+                  <TableCell align="center">
+                    {format(history.endDate, "dd/MM/yyyy")}
+                  </TableCell>
                   <TableCell align="center">
                     <IconButton
                       aria-label="edit"

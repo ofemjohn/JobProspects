@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { format } from "date-fns";
 import {
   Grid,
   Typography,
@@ -26,9 +30,19 @@ const useStyles = makeStyles({
   },
 });
 
-const EducationQualification = () => {
-  const classes = useStyles();
+const educationAwards = ["Masters", "Bachelor", "Diploma", "Certificate"];
+const grades = {
+  secondary: ["A", "A-", "B+", "C+", "C", "C-", "D+", "D", "D-", "E"],
+  tertiary: [
+    "First Class Honours",
+    "Second Class Honors Upper Division",
+    "Second Class Honors Lower Division",
+    "Pass",
+    "Distinction",
+  ],
+};
 
+const EducationQualification = () => {
   const [education, setEducation] = useState({
     schoolName: "",
     yearFrom: "",
@@ -46,15 +60,23 @@ const EducationQualification = () => {
   };
 
   const handleAddEducation = () => {
-    setEducations([...educations, education]);
-    setEducation({
-      schoolName: "",
-      yearFrom: "",
-      yearCompleted: "",
-      level: "",
-      award: "",
-      grade: "",
-    });
+    const allValuesPresent = Object.values(education).every(
+      (val) => val !== ""
+    );
+    if (!allValuesPresent) {
+      console.log("All fields should be filled");
+    } else {
+      setEducations([...educations, education]);
+      setEducation({
+        schoolName: "",
+        course: "",
+        yearFrom: "",
+        yearCompleted: "",
+        level: "",
+        award: "",
+        grade: "",
+      });
+    }
   };
 
   const handleEdit = (index) => {
@@ -65,6 +87,7 @@ const EducationQualification = () => {
       yearCompleted: educationToEdit.yearCompleted,
       level: educationToEdit.level,
       award: educationToEdit.award,
+      course: educationToEdit.course,
       grade: educationToEdit.grade,
     });
     setEducations(educations.filter((_, i) => i !== index));
@@ -80,37 +103,56 @@ const EducationQualification = () => {
         Education Form
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={8}>
           <TextField
+            fullWidth
             name="schoolName"
             value={education.schoolName}
             onChange={handleInputChange}
             label="Shool Name"
           />
         </Grid>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Grid item xs={12} sm={6}>
+            <DatePicker
+              name="yearFrom"
+              value={education.yearFrom}
+              onChange={(date) => {
+                handleInputChange({
+                  target: {
+                    name: "yearFrom",
+                    value: date,
+                  },
+                });
+              }}
+              label="Year From"
+              renderInput={(params) => <TextField {...params} fullWidth />}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <DatePicker
+              name="yearCompleted"
+              value={education.yearCompleted}
+              onChange={(date) => {
+                handleInputChange({
+                  target: {
+                    name: "yearCompleted",
+                    value: date,
+                  },
+                });
+              }}
+              label="Year Completed"
+              renderInput={(params) => <TextField {...params} fullWidth />}
+            />
+          </Grid>
+        </LocalizationProvider>
         <Grid item xs={12} sm={6}>
-          <TextField
-            name="yearFrom"
-            value={education.yearFrom}
-            onChange={handleInputChange}
-            label="Year From"
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            name="yearCompleted"
-            value={education.yearCompleted}
-            onChange={handleInputChange}
-            label="Year Completed"
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth className={classes.formControl}>
-            <InputLabel>Level</InputLabel>
+          <FormControl fullWidth>
+            <InputLabel id="level">Level Completed</InputLabel>
             <Select
+              labelId="level"
               name="level"
+              label="Level Completed"
               value={education.level}
               onChange={handleInputChange}
             >
@@ -120,64 +162,59 @@ const EducationQualification = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <FormControl fullWidth className={classes.formControl}>
-            <InputLabel>Award</InputLabel>
+          <FormControl fullWidth>
+            <InputLabel id="award">Award</InputLabel>
             <Select
+              labelId="award"
+              id="award-select"
               name="award"
+              label="Award"
               value={education.award}
               onChange={handleInputChange}
             >
               {education.level === "tertiary" ? (
-                <>
-                  <MenuItem value="bachelor">Bachelor</MenuItem>
-                  <MenuItem value="masters">Masters</MenuItem>
-                  <MenuItem value="diploma">Diploma</MenuItem>
-                  <MenuItem value="certificate">Certificate</MenuItem>
-                </>
+                educationAwards.map((award, i) => (
+                  <MenuItem key={i} value={award}>
+                    {award}
+                  </MenuItem>
+                ))
               ) : (
                 <MenuItem value="kcse">KCSE</MenuItem>
               )}
             </Select>
           </FormControl>
         </Grid>
+        {education.level === "tertiary" && (
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              name="course"
+              value={education.course}
+              onChange={handleInputChange}
+              label="Course Pursued"
+            />
+          </Grid>
+        )}
         <Grid item xs={12} sm={6}>
-          <FormControl fullWidth className={classes.formControl}>
+          <FormControl fullWidth>
             <InputLabel>Grade Attained</InputLabel>
             <Select
               name="grade"
+              label="Grade Attained"
               value={education.grade}
               onChange={handleInputChange}
             >
-              {education.level === "tertiary" ? (
-                <>
-                  <MenuItem value="first-class-honours">
-                    First Class Honours
-                  </MenuItem>
-                  <MenuItem value="second-class-upper-division">
-                    Second Class Upper Division
-                  </MenuItem>
-                  <MenuItem value="second-class-lower-division">
-                    Second Class Honours Lower Division
-                  </MenuItem>
-                  <MenuItem value="pass">Pass</MenuItem>
-                  <MenuItem value="distinction">Distinction</MenuItem>
-                </>
-              ) : (
-                <>
-                  <MenuItem value="A">A</MenuItem>
-                  <MenuItem value="A-">A-</MenuItem>
-                  <MenuItem value="B+">B+</MenuItem>
-                  <MenuItem value="B">B</MenuItem>
-                  <MenuItem value="B-">B-</MenuItem>
-                  <MenuItem value="C+">C+</MenuItem>
-                  <MenuItem value="C">C</MenuItem>
-                  <MenuItem value="C-">C-</MenuItem>
-                  <MenuItem value="D+">D+</MenuItem>
-                  <MenuItem value="D">D</MenuItem>
-                  <MenuItem value="D-">D-</MenuItem>
-                  <MenuItem value="E">E</MenuItem>
-                </>
-              )}
+              {education.level === "tertiary"
+                ? grades.tertiary.map((grade, i) => (
+                    <MenuItem key={i} value={grade}>
+                      {grade}
+                    </MenuItem>
+                  ))
+                : grades.secondary.map((grade, i) => (
+                    <MenuItem key={i} value={grade}>
+                      {grade}
+                    </MenuItem>
+                  ))}
             </Select>
           </FormControl>
         </Grid>
@@ -198,6 +235,7 @@ const EducationQualification = () => {
                   <TableCell>School Name</TableCell>
                   <TableCell>Level</TableCell>
                   <TableCell>Award</TableCell>
+                  <TableCell>Course</TableCell>
                   <TableCell>Year From</TableCell>
                   <TableCell>Year Completed</TableCell>
                   <TableCell>Grade Attained</TableCell>
@@ -210,9 +248,14 @@ const EducationQualification = () => {
                     <TableCell>{education.schoolName}</TableCell>
                     <TableCell>{education.level}</TableCell>
                     <TableCell>{education.award}</TableCell>
-                    <TableCell>{education.yearFrom}</TableCell>
-                    <TableCell>{education.yearCompleted}</TableCell>
-                    <TableCell>{education.gradeAttained}</TableCell>
+                    <TableCell>{education.course}</TableCell>
+                    <TableCell>
+                      {format(education.yearFrom, "dd/MM/yyy")}
+                    </TableCell>
+                    <TableCell>
+                      {format(education.yearCompleted, "dd/MM/yyyy")}
+                    </TableCell>
+                    <TableCell>{education.grade}</TableCell>
                     <TableCell>
                       <IconButton
                         onClick={() => handleEdit(index)}

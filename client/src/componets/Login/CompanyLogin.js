@@ -9,14 +9,15 @@ const CompanyLogin = ({ setType, setOpen }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState({ msg: "", type: "" });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await company_login({
-        email: email,
-        password: password,
-        setMessage: setMessage,
-        setOpen: setOpen,
+        email,
+        password,
+        setMessage,
+        setOpen,
       });
     } catch (error) {
       console.log(error);
@@ -32,7 +33,7 @@ const CompanyLogin = ({ setType, setOpen }) => {
         // padding: "0 15px 15px 15px",
       }}
     >
-      <h3 style={{ display: "flex", alignSelf: "center" }}>LOGIN</h3>
+      <h3 style={{ display: "flex", alignSelf: "center" }}>COMPANY LOGIN</h3>
       <p className={`${message.type === "error" ? "error" : "success"}`}>
         {message.msg}
       </p>

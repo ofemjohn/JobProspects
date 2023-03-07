@@ -1,5 +1,5 @@
 {
-    "name": "my-project",
+    "name": "job_prospects",
     "version": "1.0.0",
     "scripts": {
       "start": "run-p start:flask start:react",
