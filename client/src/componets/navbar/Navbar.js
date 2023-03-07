@@ -2,11 +2,12 @@ import { Button } from "@mui/material";
 import React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
+import LogoutUser from "../Logout";
 import "./navbar.css";
 
 const Navbar = ({ setOpen, setType }) => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const handleOpenLogin = () => {
     setOpen(true);
     setType("login");
@@ -30,14 +31,23 @@ const Navbar = ({ setOpen, setType }) => {
             </Link>
           </li>
           {isAuthenticated ? (
-            <li>
-              <Button
-                onClick={() => navigate("/userprofile")}
-                variant="outlined"
-              >
-                Go To profile
-              </Button>
-            </li>
+            <>
+              <li>
+                <Button
+                  onClick={() =>
+                    user.userType === "company"
+                      ? navigate("/company")
+                      : navigate("/userprofile")
+                  }
+                  variant="outlined"
+                >
+                  Go To profile
+                </Button>
+              </li>
+              <li>
+                <LogoutUser />
+              </li>
+            </>
           ) : (
             <>
               <li>

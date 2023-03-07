@@ -109,7 +109,7 @@ def job_search():
 
     # query the job database for all active jobs
     query = Job.query.filter(
-        Job.job_status == 'open')
+        Job.job_status == 'active')
 
     # check if location, job_type, job_title and job_salary
     # are in the database based on the inputed args by the user

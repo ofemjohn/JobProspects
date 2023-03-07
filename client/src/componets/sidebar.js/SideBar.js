@@ -29,7 +29,10 @@ const SideBar = ({ links }) => {
         ))}
       </div>
       <div className="sidebar-logout">
-        <div className="sidebar-links-item logout-icon">
+        <div
+          style={{ backgroundColor: "#fff" }}
+          className="sidebar-links-item logout-icon"
+        >
           <Logout />
         </div>
       </div>

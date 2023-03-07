@@ -11,7 +11,7 @@ import {
 import { useAuth } from "../auth/AuthProvider";
 import Axios from "axios";
 
-function SingleJob({ selectedJob, onClose }) {
+function SingleJob({ selectedJob, onClose, setOpenLogin, setType }) {
   const { user } = useAuth();
   const [message, setMessage] = useState({
     type: "",
@@ -45,7 +45,7 @@ function SingleJob({ selectedJob, onClose }) {
       (val) => val !== ""
     );
     if (!allValuesPresent) {
-      console.log("All fields should not be empty");
+      setMessage({ msg: "* All fields should be filled", type: "error" });
     } else {
       const formData = new FormData();
       console.log("formData", formData);
@@ -186,7 +186,14 @@ function SingleJob({ selectedJob, onClose }) {
                 To apply for this job,
                 <span>You need to have an account with use first</span>
               </Typography>{" "}
-              <Button>Login</Button>
+              <Button
+                onClick={() => {
+                  setType("login");
+                  setOpenLogin(true);
+                }}
+              >
+                Login
+              </Button>
             </>
           )}
           {user && (

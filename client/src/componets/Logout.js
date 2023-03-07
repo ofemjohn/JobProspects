@@ -9,7 +9,7 @@ const LogoutUser = () => {
     await logout();
   };
   return (
-    <Button sx={{ color: "#fff", fontSize: "18px" }} onClick={handleLogout}>
+    <Button sx={{ color: "#008080", fontSize: "18px" }} onClick={handleLogout}>
       <Logout />
       LOGOUT
     </Button>

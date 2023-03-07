@@ -22,6 +22,9 @@ import { useAuth } from "./auth/AuthProvider";
 import CreateJob from "./pages/companies/CreateJob";
 import { ROLE } from "./auth/roles";
 import JobSearchPage from "./pages/JobSearchPage";
+import ApplicationDetail from "./pages/job_seekers/ApplicationDetail";
+import JobApplications from "./pages/companies/JobApplications";
+import SingleApplication from "./pages/companies/SingleApplication";
 
 // COOKIE AUTH
 // get all cookies as a semicolon-separated string
@@ -43,6 +46,7 @@ function AppWrapper() {
   const { token } = useAuth();
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("user");
+  const [selectedApplication, setSelectedApplication] = useState();
 
   useEffect(() => {
     console.log(cookies);
@@ -61,7 +65,10 @@ function AppWrapper() {
             path="/register_company"
             element={<RegisterPage setOpen={setOpen} setType={setType} />}
           />
-          <Route path="/jobsearch" element={<JobSearchPage />} />
+          <Route
+            path="/jobsearch"
+            element={<JobSearchPage setOpenLogin={setOpen} setType={setType} />}
+          />
         </Route>
         <Route path="*" element={<NoMatch />} />
 
@@ -71,6 +78,11 @@ function AppWrapper() {
             <Route path="/company" element={<CompanyDashboard />} />
             <Route path="/jobs/post" element={<CreateJob />} />
             <Route path="/jobs" element={<CompanyJobs />} />
+            <Route path="/candidates" element={<JobApplications />} />
+            <Route
+              path="/singleApplication/:id"
+              element={<SingleApplication />}
+            />
           </Route>
         </Route>
 
@@ -79,8 +91,19 @@ function AppWrapper() {
           <Route element={<UserLayout />}>
             <Route path="/userdashboard" element={<UserDashboard />} />
             <Route path="/userprofile" element={<UserProfile />} />
+            <Route
+              path={`/applied_jobs/:id`}
+              element={
+                <ApplicationDetail selectedApplication={selectedApplication} />
+              }
+            />
             <Route path="/resume" element={<UserResume />} />
-            <Route path="/appliedjobs" element={<AppliedJobs />} />
+            <Route
+              path="/appliedjobs"
+              element={
+                <AppliedJobs setSelectedApplication={setSelectedApplication} />
+              }
+            />
             <Route path="/unfinishedjobs" element={<UnfinishedJobs />} />
             <Route path="/messages" element={<Messages />} />
           </Route>

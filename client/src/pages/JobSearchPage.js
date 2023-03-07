@@ -7,16 +7,14 @@ import {
   Select,
   MenuItem,
   Slider,
-  Button,
 } from "@mui/material";
-import { Search } from "@mui/icons-material";
 import Axios from "axios";
 import JobCard from "../componets/JobCard";
 import JobModal from "../componets/JobModal";
 
 const jobTypes = ["Full time", "Part time", "Contract", "Internship"];
 
-function JobSearchPage() {
+function JobSearchPage({ setOpenLogin, setType }) {
   const [msg, setMsg] = useState("");
   const [selectedJob, setSelectedJob] = useState();
   const [open, setOpen] = useState(false);
@@ -81,25 +79,6 @@ function JobSearchPage() {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleSearch = async () => {
-    // handle search logic here
-    // console.log(searchParams);
-    // try {
-    //   const response = await Axios.get("/jobs/search", {
-    //     params: searchParams,
-    //   });
-    //   console.log(response);
-    //   if (response.data.message) {
-    //     console.log("No jobs found");
-    //     return;
-    //   } else {
-    //     setJobs(response.data);
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   // close modal
@@ -192,6 +171,8 @@ function JobSearchPage() {
       </Grid>
       <JobModal
         open={open}
+        setOpenLogin={setOpenLogin}
+        setType={setType}
         setOpen={setOpen}
         onClose={handleClose}
         selectedJob={selectedJob}
