@@ -1,8 +1,10 @@
 import "./App.css";
 import React from "react";
 
+import AppWrapper from "./AppWrapper";
+
 function App() {
-  return "JOB PROSPECTS";
+  return <AppWrapper />;
 }
 
 export default App;

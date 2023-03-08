@@ -20,6 +20,7 @@ class Companies(db.Model):
         return {
             "company_id": self.company_id,
             "company_name": self.company_name,
+            "user_type": self.user_type,
             "company_email": self.company_email,
             "company_country": self.company_country,
             "company_website": self.company_website,

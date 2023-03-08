@@ -1,6 +1,6 @@
 from config import app, db
 from flask import jsonify, request
-from models.user_m import User
+from models.user_m import User, Profile, Education, EmploymentHistory
 from flask_jwt_extended import jwt_required
 
 
@@ -9,11 +9,11 @@ def get_users():
     users = User.query.all()
     # return jsonify({'user': users})
     return jsonify([user.to_dict() for user in users])
-
 # GET A SINGLE USER
 
 
 @app.route('/user/<int:id>', methods=['GET'])
+@jwt_required()
 def get_user(id):
     user = User.query.filter(User.user_id == id).first()
     if not user:

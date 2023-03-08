@@ -8,6 +8,7 @@ from datetime import datetime
 import os
 from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, unset_jwt_cookies
 import logging
+from flask_cors import cross_origin
 
 bcrypt = Bcrypt()
 jwt = JWTManager(app)
@@ -18,7 +19,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/auth/register', methods=['POST'])
 def register_user():
-    user_data = request.form
+    user_data = request.json
     first_name = user_data.get('first_name')
     last_name = user_data.get('last_name')
     email = user_data.get('email')
@@ -29,6 +30,8 @@ def register_user():
     address = user_data.get('address')
     password = user_data.get('password')
 
+    if not first_name or not last_name or not email or not phone or not gender or not country or not state or not address or not password:
+        return jsonify({"message": "All fields should be filled"}), 400
     # encode the password
     pwd_hash = bcrypt.generate_password_hash(password, 5).decode('utf-8')
 
@@ -37,51 +40,54 @@ def register_user():
     try:
         db.session.add(newUser)
         db.session.commit()
-        return {"message": "User created successfully"}, 201
+        return jsonify({"message": "User created successfully"}), 200
     except Exception as e:
         db.session.rollback()
         logging.error(e)
         existing_user = db.session.query(
             User).filter(User.email == email).first()
     if existing_user is not None:
-        return {"message": f'User with email: {email} already exists'}, 409
+        return jsonify({"message": f'User with email: {email} already exists'}), 409
     else:
-        return {"message": "An error occurred while creating the user"}, 500
+        return jsonify({"message": "An error occurred while creating the user"}), 500
 
 
 # LOGIN ROUTE
 @app.route('/auth/login', methods=['POST'])
+@cross_origin()
 def login():
-    login_data = request.form
+    login_data = request.json
     email = login_data.get('email')
     password = login_data.get('password')
 
     # Check if fields not empty
     if not email or not password:
-        return {"message": "Email or Password is required"}, 204
+        return jsonify({"message": "Email or Password is required"}), 400
     # CHECK IF USER EXISTS
     user = User.query.filter(User.email == email).first()
     if not user:
-        return {"message": "Invalid username or password"}, 401
+        return jsonify({"message": "Invalid username or password"}), 401
 
     # CHECK THE PASSWORD
     if bcrypt.check_password_hash(user.password, password):
         user.last_login = datetime.utcnow()
         db.session.commit()
-
-        access_token = create_access_token(
+        token = create_access_token(
             identity=user.email)
-        # res = jsonify({"message": "Logged in Successfully"})
-        # set_access_cookies(res, access_token)
-        return f"token is {access_token}", 200
+        response = jsonify({"message": "Successfull Login", "user": {
+                           "userId": user.user_id, "userType": user.user_type, "name": user.first_name + " " + user.last_name, "email": user.email, "phone": user.phone}, "token": token})
 
-    return {"message": "Invalid Password"}, 401
+        set_access_cookies(response, token, max_age=3600)
+
+        return response, 200
+
+    return jsonify({"message": "Invalid Password"}), 401
 
 # LOGOUT ROUTE
 
 
 @app.route("/auth/logout", methods=["POST"])
-def logout():
+def logout_with_cookies():
     response = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(response)
     return response
@@ -100,7 +106,7 @@ def register_company():
 
     # CHECK IF FIELDS NOT EMPTY
     if not company_name or not company_email or not company_country or not company_website or 'file' not in request.files or not password:
-        return jsonify({"message": "Fields cannot be empty"}), 204
+        return jsonify({"message": "Fields cannot be empty"}), 404
     # Extract filename and check if its allowed
     else:
         componay_logo = request.files.get('file')
@@ -142,27 +148,29 @@ def register_company():
 # COMPANY LOGIN
 @app.route('/companies/auth/login', methods=['POST'])
 def company_login():
-    login_data = request.form
+    login_data = request.json
     email = login_data.get('email')
     password = login_data.get('password')
 
     # Check if fields not empty
     if not email or not password:
-        return {"message": "Email or Password is required"}, 204
+        return jsonify({"message": "Email or Password is required"}), 404
     # CHECK IF USER EXISTS
     company = Companies.query.filter(Companies.company_email == email).first()
     if not company:
-        return {"message": "Invalid username or password"}, 401
+        return jsonify({"message": "Invalid username or password"}), 401
 
     # CHECK THE PASSWORD
     if bcrypt.check_password_hash(company.password, password):
         company.last_login = datetime.utcnow()
         db.session.commit()
-
-        access_token = create_access_token(
+        token = create_access_token(
             identity=company.company_email)
-        # res = jsonify({"message": "Logged in Successfully"})
-        # set_access_cookies(res, access_token)
-        return f"token is {access_token}", 200
+        response = jsonify({"message": "Successfull Login", "company": {
+                           "companyId": company.company_id, "userType": company.user_type, "name": company.company_name}, "token": token})
 
-    return {"message": "Invalid Password"}, 401
+        set_access_cookies(response, token, max_age=3600)
+
+        return response, 200
+
+    return jsonify({"message": "Invalid Password"}), 401
