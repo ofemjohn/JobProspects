@@ -7,8 +7,18 @@ from models.companies_m import Companies
 from werkzeug.utils import secure_filename
 import os
 from sqlalchemy import and_
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 
+# Config
+cloudinary.config(
+    cloud_name="brayohmurithi",
+    api_key="273368127559497",
+    api_secret="Ypg4Y3dB94Edyc2DYXKYjqnlNAw",
+    secure=True
+)
 # Define allowed extensions
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'doc'}
 
@@ -28,27 +38,27 @@ def create_jobApplication():
     job_id = request.form['job_id']
     application_cover_letter = request.form['cover_letter']
     file = request.files['file']
-    print(file.filename)
 
     # CHECK IF FIELDS NOT EMPTY
     if not application_cover_letter or not file:
         return jsonify({"message": "Fields cannot be empty"}), 404
     # Extract filename and check if its allowed
     else:
-
-        # print(file)
         if not allowed_file(file.filename):
             return jsonify({"Message": "File is not allowed, can only be pdf, docx or doc"}), 403
         else:
-            filename = secure_filename(file.filename)
-            if not os.path.exists('file_upload'):
-                os.makedirs('file_upload')
-            file.save(os.path.join('file_upload', filename))
-            resume_url = os.path.join("/api/file_upload", filename)
+            # Upload file to Cloudinary
+            try:
+                upload_result = cloudinary.uploader.upload(file)
+            except:
+                return {"message": "An error occurred while uploading the file to Cloudinary"}, 500
+
+            resume_url = upload_result['secure_url']
             if resume_url:
+                # Check if user has already applied for this job
                 # alreadyApplied = Application.query.filter(
-                #     and_(user_id == user_id, job_id == job_id))
-                # if alreadyApplied is not None:
+                #     (Application.user_id == user_id) & (Application.job_id == job_id)).first()
+                # if alreadyApplied:
                 #     return jsonify({
                 #         "message": "You already applied to this job"
                 #     }), 409
@@ -126,11 +136,28 @@ def company_applications(id):
 def get_application(id):
     application = Application.query.filter(
         Application.application_id == id).first()
-    print({"application": application.to_dict()})
+
     if (application):
         user = User.query.filter(
             User.user_id == application.user_id).first()
-        print({"user": user.to_dict()})
+
         job = Job.query.filter(Job.job_id == application.job_id).first()
-        print({"job": job.to_dict()})
+
         return jsonify({"application": application.to_dict(), "job": job.to_dict(), "user": user.to_dict()})
+
+# UPDATE APPLICATION STATUS
+
+
+@app.route("/application/<int:id>", methods=["PUT"])
+def application_status_update(id):
+    status = request.json.get('status')
+    application = Application.query.filter(
+        Application.application_id == id).first()
+    if (application):
+        application.application_status = status
+        try:
+            db.session.commit()
+            return jsonify({"message": "Status updated Successfully"}), 200
+        except:
+            db.session.rollback()
+            return {"message": "An error occurred while creating the job application"}, 500

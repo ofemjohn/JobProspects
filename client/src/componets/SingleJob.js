@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -25,6 +25,16 @@ function SingleJob({ selectedJob, onClose, setOpenLogin, setType }) {
     cover_letter: "",
     file: "",
   });
+
+  useEffect(() => {
+    setApplication({
+      name: user ? user.name : "",
+      email: user ? user.email : "",
+      phone: user ? user.phone : "",
+      cover_letter: "",
+      file: "",
+    });
+  }, [user]);
 
   const handleInputChange = (event) => {
     const target = event.target;

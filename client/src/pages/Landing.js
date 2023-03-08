@@ -1,8 +1,6 @@
 import {
   Button,
   Grid,
-  IconButton,
-  Paper,
   Typography,
   useMediaQuery,
   useTheme,
@@ -134,7 +132,7 @@ const Landing = () => {
           >
             {" "}
             Looking for Jobs instead?
-            <Link style={{ color: "#008080" }} to="#">
+            <Link style={{ color: "#008080" }} to="/jobsearch">
               Apply For Jobs{" "}
             </Link>
           </Typography>

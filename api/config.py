@@ -15,5 +15,6 @@ app.config["JWT_SECRET_KEY"] = "jobprospects"
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)
 app.config["JWT_COOKIE_SECURE"] = False
 app.config["JWT_TOKEN_LOCATION"] = ["headers"]
+app.config['CLOUDINARY_URL'] = 'cloudinary://273368127559497:Ypg4Y3dB94Edyc2DYXKYjqnlNAw@brayohmurithi'
 
 db = SQLAlchemy(app)

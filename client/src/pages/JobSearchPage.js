@@ -48,8 +48,25 @@ function JobSearchPage({ setOpenLogin, setType }) {
   };
 
   useEffect(() => {
+    const fetchJob = async () => {
+      try {
+        const response = await Axios.get("/jobs/search", {
+          params: searchParams,
+        });
+        console.log(response);
+        if (response.data.message) {
+          console.log("No jobs found");
+          setJobs(null);
+          setMsg("No Jobs found");
+          return;
+        } else {
+          setJobs(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchJob();
-    console.log(searchParams);
   }, [searchParams]);
 
   useEffect(() => {
@@ -61,25 +78,6 @@ function JobSearchPage({ setOpenLogin, setType }) {
       max_salary: salaryRange[1],
     });
   }, [jobTitle, jobType, location, salaryRange]);
-
-  const fetchJob = async () => {
-    try {
-      const response = await Axios.get("/jobs/search", {
-        params: searchParams,
-      });
-      console.log(response);
-      if (response.data.message) {
-        console.log("No jobs found");
-        setJobs(null);
-        setMsg("No Jobs found");
-        return;
-      } else {
-        setJobs(response.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   // close modal
   const handleClose = () => {

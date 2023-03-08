@@ -1,21 +1,21 @@
 import React from "react";
-import { makeStyles } from "@mui/styles";
 import { Box, Typography, Button, Grid, Paper } from "@mui/material";
-import { GetApp, Image } from "@mui/icons-material";
+import { GetApp } from "@mui/icons-material";
+import axios from "axios";
 
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     padding: theme.spacing(2),
-//   },
-//   paper: {
-//     padding: theme.spacing(2),
-//     marginBottom: theme.spacing(2),
-//   },
-//   title: {
-//     fontWeight: "bold",
-//     marginBottom: theme.spacing(1),
-//   },
-// }));
+const downloadFile = async (url) => {
+  try {
+    const response = await axios.get(url, { responseType: "blob" });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "filename.pdf");
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const ApplicationDetail = (props) => {
   //   const classes = useStyles();
@@ -98,9 +98,10 @@ const ApplicationDetail = (props) => {
               variant="contained"
               color="primary"
               startIcon={<GetApp />}
-              href="../../../../api/file_upload/receipt.pdf"
+              href={`${selectedApplication.application.application_resume_url}`}
               // {selectedApplication.application.application_resume_url}
-              download
+              download="cirriculum vitae"
+              target="_blank"
             >
               Download
             </Button>

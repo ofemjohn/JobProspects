@@ -39,6 +39,23 @@ const JobApplications = () => {
     fetchApplication();
   }, []);
 
+  const handleVisibility = async (id) => {
+    try {
+      const res = await axios.get(`/applications/${id}`);
+      if (res.data.application.application_status == "pending") {
+        const response = await axios.put(`/application/${id}`, {
+          status: "Application Under Review",
+        });
+
+        if (response.status == 200) {
+          navigate(`/singleApplication/${id}`);
+        }
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Grid container spacing={2} justifyContent="center">
       <Typography>JOB APPLICANTS</Typography>
@@ -78,8 +95,8 @@ const JobApplications = () => {
                     <TableCell>
                       <IconButton
                         onClick={() =>
-                          navigate(
-                            `/singleApplication/${application.application.application_id}`
+                          handleVisibility(
+                            application.application.application_id
                           )
                         }
                       >
