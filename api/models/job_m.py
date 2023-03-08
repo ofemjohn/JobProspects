@@ -18,7 +18,7 @@ class Job(db.Model):
     job_salary_period = db.Column(db.String(100))
     job_city = db.Column(db.String(255))
     job_country = db.Column(db.String(255))
-    job_status = db.Column(db.String(255), nullable=False)
+    job_status = db.Column(db.String(255), nullable=False, default="active")
     apply_by = db.Column(db.DateTime())
     external_apply_links = db.Column(db.String(512))
     job_posted_date = db.Column(db.DateTime(), default=datetime.utcnow)

@@ -64,12 +64,6 @@ function SingleJob({ selectedJob, onClose, setOpenLogin, setType }) {
       formData.append("cover_letter", application.cover_letter);
       formData.append("file", application.file);
 
-      console.log("formData After appending", formData);
-
-      // for (const [key, value] of formData.entries()) {
-      //   console.log(key, value);
-      // }
-
       try {
         const response = await Axios.post("/jobs/apply", formData, {
           headers: {

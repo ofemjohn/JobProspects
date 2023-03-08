@@ -9,12 +9,33 @@ import os
 from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, unset_jwt_cookies
 import logging
 from flask_cors import cross_origin
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 bcrypt = Bcrypt()
 jwt = JWTManager(app)
 logging.basicConfig(level=logging.DEBUG)
 
 # Register new user
+
+# Config
+cloudinary.config(
+    cloud_name="brayohmurithi",
+    api_key="273368127559497",
+    api_secret="Ypg4Y3dB94Edyc2DYXKYjqnlNAw",
+    secure=True
+)
+
+
+ALLOWED_EXTENSIONS = {'jpeg', 'jpg', 'png'}
+
+# check if file meets the extension requirements
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/auth/register', methods=['POST'])
@@ -97,35 +118,28 @@ def logout_with_cookies():
 @app.route("/companies/auth/register", methods=["POST"])
 def register_company():
     company_data = request.form
-    company_name = company_data.get("company_name")
-    company_email = company_data.get("company_email")
-    company_country = company_data.get("company_country")
-    company_website = company_data.get("company_website")
+    company_name = company_data.get("name")
+    company_email = company_data.get("email")
+    company_country = company_data.get("country")
+    company_website = company_data.get("website")
     password = company_data.get("password")
+    file = request.files['file']
     # file
 
     # CHECK IF FIELDS NOT EMPTY
-    if not company_name or not company_email or not company_country or not company_website or 'file' not in request.files or not password:
+    if not company_name or not company_email or not company_country or not company_website or not file or not password:
         return jsonify({"message": "Fields cannot be empty"}), 404
     # Extract filename and check if its allowed
     else:
-        componay_logo = request.files.get('file')
-        # Define allowed extensions
-        ALLOWED_EXTENSIONS = {'jpeg', 'jpg', 'png'}
-
-        # check if file meets the extension requirements
-
-        def allowed_file(filename):
-            return '.' in filename and \
-                filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-        filename = secure_filename(componay_logo.filename)
-        if not allowed_file(filename):
+        if not allowed_file(file.filename):
             return jsonify({"Message": "File is not allowed, can oly be png, jpeg or jpg"}), 403
         else:
-            if not os.path.exists('file_upload'):
-                os.makedirs('file_upload')
-            componay_logo.save(os.path.join('/api/file_upload', filename))
-            logo_url = os.path.join("/api/file_upload", filename)
+            try:
+                upload_result = cloudinary.uploader.upload(file)
+            except:
+                return {"message": "An error occurred while uploading the file to Cloudinary"}, 500
+
+            logo_url = upload_result['secure_url']
             if logo_url:
                 pwd_hash = bcrypt.generate_password_hash(
                     password, 5).decode('utf-8')

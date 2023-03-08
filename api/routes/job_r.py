@@ -59,7 +59,7 @@ def create_job():
     job_salary_currency = job_data.get('job_salary_currency')
     job_city = job_data.get('job_city')
     job_country = job_data.get('job_country')
-    job_status = job_data.get('job_status')
+    # job_status = job_data.get('job_status')
     apply_by = job_data.get('apply_by')
     external_apply_links = job_data.get('external_apply_links')
 
@@ -78,7 +78,7 @@ def create_job():
               job_salary_currency=job_salary_currency,
               job_city=job_city,
               job_country=job_country,
-              job_status=job_status,
+              #   job_status=job_status,
               apply_by=apply_by,
               external_apply_links=external_apply_links,
               )
@@ -123,14 +123,13 @@ def job_search():
         query = query.filter(Job.employment_type.ilike(f'%{job_type}%'))
     if job_title:
         query = query.filter(Job.job_title.ilike(f'%{job_title}%'))
-    if max_salary and not min_salary:
-        query = query.filter(Job.job_salary >= max_salary)
-    elif min_salary and not max_salary:
-        query = query.filter(Job.job_salary <= min_salary)
-    elif min_salary and max_salary:
-        query = query.filter(
-            and_(Job.job_salary >= min_salary, Job.job_salary <= max_salary))
-
+    # if max_salary and not min_salary:
+    #     query = query.filter(Job.job_salary >= max_salary)
+    # elif min_salary and not max_salary:
+    #     query = query.filter(Job.job_salary <= min_salary)
+    # elif min_salary and max_salary:
+    #     query = query.filter(
+    #         and_(Job.job_salary >= min_salary, Job.job_salary <= max_salary))
     jobs = query.all()
     if not jobs:
         return jsonify({"message": "Job not found"})

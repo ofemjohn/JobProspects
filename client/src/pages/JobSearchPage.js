@@ -12,7 +12,7 @@ import Axios from "axios";
 import JobCard from "../componets/JobCard";
 import JobModal from "../componets/JobModal";
 
-const jobTypes = ["Full time", "Part time", "Contract", "Internship"];
+const jobTypes = ["Full-time", "Part-time", "Contract", "Internship"];
 
 function JobSearchPage({ setOpenLogin, setType }) {
   const [msg, setMsg] = useState("");

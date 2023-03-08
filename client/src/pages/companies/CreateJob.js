@@ -14,20 +14,19 @@ import {
 } from "@mui/material";
 import Axios from "axios";
 import { Box } from "@mui/system";
+import { useAuth } from "../../auth/AuthProvider";
 
 const initialFormState = {
   job_title: "",
   employment_type: "",
   job_description: "",
   job_is_remote: false,
-  company_id: 1,
-  job_apply_link: "",
+  company_id: null,
   job_salary: "",
   job_salary_currency: "",
   job_salary_period: "",
   job_city: "",
   job_country: "",
-  job_status: "",
   apply_by: "",
   external_apply_links: "",
   job_required_experience: [],
@@ -37,6 +36,7 @@ const initialFormState = {
 };
 
 const CreateJob = () => {
+  const { user } = useAuth();
   const [formData, setFormData] = useState(initialFormState);
   const [message, setMessage] = useState({ msg: "", type: "" });
 
@@ -45,6 +45,7 @@ const CreateJob = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: type === "checkbox" ? checked : value,
+      company_id: user.companyId,
     }));
   };
 
@@ -177,31 +178,6 @@ const CreateJob = () => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={4} md={3}>
-            <TextField
-              label="Apply Link"
-              name="job_apply_link"
-              value={formData.job_apply_link}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={4} md={3}>
-            <FormControl fullWidth>
-              <InputLabel id="status">Status</InputLabel>
-              <Select
-                labelId="status"
-                label="Status"
-                name="job_status"
-                value={formData.job_status}
-                onChange={handleInputChange}
-                fullWidth
-              >
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="closed">Closed</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
           <Grid item xs={6} md={3}>
             <TextField
               label="Apply By"
@@ -222,7 +198,6 @@ const CreateJob = () => {
               value={formData.external_apply_links}
               onChange={handleInputChange}
               fullWidth
-              multiline
               rows={4}
             />
           </Grid>
