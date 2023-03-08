@@ -15,6 +15,12 @@ class Application(db.Model):
     application_status = db.Column(db.String(50))
     application_date = db.Column(db.DateTime(), default=datetime.utcnow)
 
+    '''
+    backref is used to establish a one-way relationship between two models, 
+    back_populates is used to create a two-way relationship where each model 
+    has a reference to the other.
+    '''
+
     user = db.relationship("User", back_populates="application")
     job = db.relationship("Job", back_populates="application")
 
