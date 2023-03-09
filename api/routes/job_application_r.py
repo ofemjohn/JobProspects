@@ -7,18 +7,11 @@ from models.companies_m import Companies
 from werkzeug.utils import secure_filename
 import os
 from sqlalchemy import and_
-import cloudinary
+
 import cloudinary.uploader
 import cloudinary.api
 
 
-# Config
-cloudinary.config(
-    cloud_name="brayohmurithi",
-    api_key="273368127559497",
-    api_secret="Ypg4Y3dB94Edyc2DYXKYjqnlNAw",
-    secure=True
-)
 # Define allowed extensions
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'doc'}
 
