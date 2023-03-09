@@ -1,7 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
+from dotenv import load_dotenv
 import os
+
+
+load_dotenv()
 
 
 app = Flask(__name__)
