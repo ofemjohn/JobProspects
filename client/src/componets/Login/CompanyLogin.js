@@ -70,7 +70,7 @@ const CompanyLogin = ({ setType, setOpen }) => {
           Submit
         </Button>
 
-        <a href="#">Forgot Password?</a>
+        <a href="/forgot_password">Forgot Password?</a>
         <p>
           No account?{" "}
           <button

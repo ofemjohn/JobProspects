@@ -25,7 +25,6 @@ const Signup = ({ setType }) => {
     country: "",
     state: "",
     address: "",
-    gender: "",
     password: "",
   });
 

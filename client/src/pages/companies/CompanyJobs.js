@@ -42,35 +42,30 @@ const CompanyJobs = () => {
       }
     };
     fetchJobs();
-    // getJobsByCompanyId(props.companyId).then((data) => {
-    //   setJobs(data);
-    //   setFilteredJobs(data.filter((job) => job.status === statusFilter));
-    // });
-    console.log(filteredJobs, jobs);
   }, [user.companyId, statusFilter]);
 
-  const handleStatusToggle = (event, jobId) => {
-    const newStatus = event.target.checked ? "active" : "closed";
-    // Update job status in database and update state
-    // updateJobStatus(jobId, newStatus).then(() => {
-    //   setJobs((prevJobs) =>
-    //     prevJobs.map((job) => {
-    //       if (job.id === jobId) {
-    //         return { ...job, status: newStatus };
-    //       }
-    //       return job;
-    //     })
-    //   );
-    //   setFilteredJobs((prevJobs) =>
-    //     prevJobs.map((job) => {
-    //       if (job.id === jobId) {
-    //         return { ...job, status: newStatus };
-    //       }
-    //       return job;
-    //     })
-    //   );
-    // });
-  };
+  // const handleStatusToggle = (event, jobId) => {
+  //   const newStatus = event.target.checked ? "active" : "closed";
+  //   // Update job status in database and update state
+  //   // updateJobStatus(jobId, newStatus).then(() => {
+  //   //   setJobs((prevJobs) =>
+  //   //     prevJobs.map((job) => {
+  //   //       if (job.id === jobId) {
+  //   //         return { ...job, status: newStatus };
+  //   //       }
+  //   //       return job;
+  //   //     })
+  //   //   );
+  //   //   setFilteredJobs((prevJobs) =>
+  //   //     prevJobs.map((job) => {
+  //   //       if (job.id === jobId) {
+  //   //         return { ...job, status: newStatus };
+  //   //       }
+  //   //       return job;
+  //   //     })
+  //   //   );
+  //   // });
+  // };
 
   const handleStatusFilterChange = (event) => {
     setStatusFilter(event.target.value);

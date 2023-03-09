@@ -35,9 +35,11 @@ const RegisterPage = ({ setOpen, setType }) => {
 
   useEffect(() => {
     if (signupData.password !== signupData.confirmPassword) {
-      console.log("password do not match");
+      setMessage({ msg: "* Password do not match", type: "error" });
+    } else {
+      setMessage({ msg: "Password Matched", type: "success" });
     }
-  }, [signupData.confirmPassword]);
+  }, [signupData.confirmPassword, signupData.password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

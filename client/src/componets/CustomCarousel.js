@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import { Button, IconButton, Paper, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Button, IconButton, Typography } from "@mui/material";
 
 const useStyles = makeStyles({
   root: {

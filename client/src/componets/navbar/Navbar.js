@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
 import LogoutUser from "../Logout";
 import "./navbar.css";
@@ -12,10 +12,10 @@ const Navbar = ({ setOpen, setType }) => {
     setOpen(true);
     setType("login");
   };
-  const handleOpenSignUp = () => {
-    setOpen(true);
-    setType("signup");
-  };
+  // const handleOpenSignUp = () => {
+  //   setOpen(true);
+  //   setType("signup");
+  // };
   return (
     <>
       <div className="navbar">

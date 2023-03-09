@@ -19,21 +19,20 @@ function AppliedJobs({ setSelectedApplication }) {
   const { user } = useAuth();
   const [appliedJobs, setAppliedJobs] = useState();
 
-  // JOB APPLICATION FETCH
-  const fetchApplication = async () => {
-    try {
-      const response = await axios.get(`/api/user/jobs/${user.userId}`);
-      setAppliedJobs(response.data);
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
+    // JOB APPLICATION FETCH
+    const fetchApplication = async () => {
+      try {
+        const response = await axios.get(`/api/user/jobs/${user.userId}`);
+        setAppliedJobs(response.data);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     // Fetch applied jobs data from backend API
     fetchApplication();
-  }, []);
+  }, [user.userId]);
 
   return (
     <Grid container spacing={2} justifyContent="center">

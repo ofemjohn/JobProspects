@@ -1,20 +1,12 @@
-import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
-import {
-  Menu as MenuIcon,
-  NotificationsNone,
-  MailOutline,
-  Person,
-} from "@mui/icons-material";
+import { IconButton, Menu } from "@mui/material";
+import { Menu as MenuIcon } from "@mui/icons-material";
 import React, { useState } from "react";
 import Navbar from "../navbar/Navbar";
 import "./header.css";
-import { useAuth } from "../../auth/AuthProvider";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Grid } from "@mui/material";
 
-const Header = ({ setOpen, setType, name }) => {
-  const { isAuthenticated, logout } = useAuth();
+const Header = ({ setOpen, setType }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (e) => {

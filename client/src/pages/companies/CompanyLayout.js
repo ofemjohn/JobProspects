@@ -1,6 +1,5 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { useTheme } from "@mui/material/styles";
 import { AppBar, Tabs, Tab, Typography, Box } from "@mui/material";
 import { FactCheck, Group, Home, Note, Settings } from "@mui/icons-material";
 import { Link, Outlet } from "react-router-dom";
@@ -31,36 +30,12 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`,
-  };
-}
-
 export default function CompanyLayout() {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const theme = useTheme();
-
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
-
-  function LinkTab(props) {
-    return (
-      <Tab
-        component="a"
-        onClick={(event) => {
-          event.preventDefault();
-        }}
-        {...props}
-      />
-    );
-  }
 
   return (
     <Box sx={{ bgcolor: "background.paper", width: "100%" }}>

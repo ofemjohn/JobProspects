@@ -8,7 +8,7 @@ import {
 } from "@mui/icons-material";
 import React from "react";
 import { Outlet } from "react-router-dom";
-import SideBar from "../../componets/sidebar.js/SideBar";
+import SideBar from "../../componets/sidebar/SideBar";
 
 const sideBarLinks = [
   {

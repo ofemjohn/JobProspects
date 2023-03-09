@@ -31,6 +31,7 @@ const ApplicationDetail = (props) => {
               src={selectedApplication.company.company_logo_url}
               width="100px"
               height="100%"
+              alt={selectedApplication.company.company_name}
             />
           </Grid>
           <Grid item xs={12}>

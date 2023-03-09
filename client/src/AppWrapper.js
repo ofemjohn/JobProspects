@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Landing from "./pages/Landing";
 import { Route, Routes } from "react-router-dom";
 import NoMatch from "./pages/NoMatch";
@@ -26,31 +26,12 @@ import ApplicationDetail from "./pages/job_seekers/ApplicationDetail";
 import JobApplications from "./pages/companies/JobApplications";
 import SingleApplication from "./pages/companies/SingleApplication";
 
-// COOKIE AUTH
-// get all cookies as a semicolon-separated string
-const cookies = document.cookie;
-
-// split the string into individual cookies
-const cookieArray = cookies.split(";");
-
-// loop through each cookie to find the one you're looking for
-let token;
-cookieArray.forEach((cookie) => {
-  const [name, value] = cookie.trim().split("=");
-  if (name === "token") {
-    token = value;
-  }
-});
-
 function AppWrapper() {
   const { token } = useAuth();
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("user");
   const [selectedApplication, setSelectedApplication] = useState();
 
-  useEffect(() => {
-    console.log(cookies);
-  }, []);
   // SET HEADERS
   axios.defaults.headers.post["Content-Type"] = "application/json";
   axios.defaults.headers.post["Authorization"] = `Bearer ${token}`;

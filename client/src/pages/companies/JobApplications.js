@@ -21,32 +21,30 @@ const JobApplications = () => {
   const { user } = useAuth();
   const [applications, setApplications] = useState();
 
-  //   FETCH APPLICATIONS FUNCTION
-  const fetchApplication = async () => {
-    try {
-      const response = await axios.get(
-        `/company/applications/${user.companyId}`
-      );
-      setApplications(response.data);
-      console.log(applications);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
+    //   FETCH APPLICATIONS FUNCTION
+    const fetchApplication = async () => {
+      try {
+        const response = await axios.get(
+          `/company/applications/${user.companyId}`
+        );
+        setApplications(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchApplication();
-  }, []);
+  }, [user.companyId]);
 
   const handleVisibility = async (id) => {
     try {
       const res = await axios.get(`/api/applications/${id}`);
-      if (res.data.application.application_status == "pending") {
+      if (res.data.application.application_status === "pending") {
         const response = await axios.put(`/api/application/${id}`, {
           status: "Application Under Review",
         });
 
-        if (response.status == 200) {
+        if (response.status === 200) {
           navigate(`/singleApplication/${id}`);
         }
         console.log(response.data.message);

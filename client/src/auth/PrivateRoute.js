@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import AccessDenied from "../componets/AccessDenied";
 import { useAuth } from "./AuthProvider";

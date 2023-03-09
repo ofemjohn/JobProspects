@@ -17,36 +17,35 @@ const SingleApplication = () => {
   const [status, setStatus] = useState("");
   const { id } = useParams();
 
-  //   FETCH APPLICATION
-  const fetchApplication = async () => {
-    try {
-      const response = await axios.get(`/api/applications/${id}`);
-      console.log(response.data);
-      setApplication(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   useEffect(() => {
-    fetchApplication();
-  }, [id]);
-  useEffect(() => {
-    updateStatus();
-  }, [status]);
-
-  // UPDATE STATUS
-  const updateStatus = async () => {
-    if (status) {
+    //   FETCH APPLICATION
+    const fetchApplication = async () => {
       try {
-        const response = await axios.put(`/api/application/${id}`, {
-          status: status,
-        });
-        console.log(response.data.message);
+        const response = await axios.get(`/api/applications/${id}`);
+        console.log(response.data);
+        setApplication(response.data);
       } catch (error) {
         console.log(error);
       }
-    }
-  };
+    };
+    fetchApplication();
+  }, [id]);
+  useEffect(() => {
+    // UPDATE STATUS
+    const updateStatus = async () => {
+      if (status) {
+        try {
+          const response = await axios.put(`/api/application/${id}`, {
+            status: status,
+          });
+          console.log(response.data.message);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    updateStatus();
+  }, [status, id]);
 
   const handleChange = (e) => {
     setStatus(e.target.value);

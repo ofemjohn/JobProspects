@@ -31,21 +31,19 @@ const UserProfile = () => {
   const [component, setComponent] = useState("");
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await Axios.get(`/api/user/${parseInt(userId)}`, {
+          credentials: "include",
+        });
+
+        setUserData(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchUserData();
-    console.log(userData);
   }, [userId]);
-
-  const fetchUserData = async () => {
-    try {
-      const response = await Axios.get(`/api/user/${parseInt(userId)}`, {
-        credentials: "include",
-      });
-
-      setUserData(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   // Handle click
   useEffect(() => {
