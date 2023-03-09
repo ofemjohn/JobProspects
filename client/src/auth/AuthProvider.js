@@ -38,7 +38,7 @@ function AuthProvider({ children }) {
 
   const login = async ({ email, password, setMessage, setOpen }) => {
     try {
-      const response = await Axios.post("/auth/login", {
+      const response = await Axios.post("/api/auth/login", {
         email: email,
         password: password,
       });
@@ -66,7 +66,7 @@ function AuthProvider({ children }) {
 
   const company_login = async ({ email, password, setMessage, setOpen }) => {
     try {
-      const response = await Axios.post("/companies/auth/login", {
+      const response = await Axios.post("/api/companies/auth/login", {
         email: email,
         password: password,
       });
@@ -94,7 +94,7 @@ function AuthProvider({ children }) {
   // CREATE USER
   const signUp = async ({ data, setMessage, setType }) => {
     try {
-      await Axios.post("/auth/register", { ...data });
+      await Axios.post("/api/auth/register", { ...data });
       setMessage({ msg: "Registration successful", type: "success" });
       setTimeout(() => {
         setType("login");
@@ -107,7 +107,7 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      const response = await Axios.post("/auth/logout");
+      const response = await Axios.post("/api/auth/logout");
       console.log("Logged out successfully", response);
       Cookies.remove("isAuthenticated");
       Cookies.remove("userId");

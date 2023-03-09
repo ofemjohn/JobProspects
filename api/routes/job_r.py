@@ -6,7 +6,7 @@ import logging
 from sqlalchemy import or_, and_
 
 
-@app.route('/jobs', methods=['GET'])
+@app.route('/api/jobs', methods=['GET'])
 def get_jobs():
     jobs = Job.query.join(Companies).all()
    # return jsonify({'user': users})
@@ -40,7 +40,7 @@ def get_jobs():
 
 
 # POST NEW JOBS
-@app.route('/jobs/post', methods=['POST'])
+@app.route('/api/jobs/post', methods=['POST'])
 def create_job():
     job_data = request.json
     job_title = job_data.get('job_title')
@@ -91,7 +91,7 @@ def create_job():
 
 # FILTER JOBS BY TITL, CITY, COUNTRY, SALARY, ALL JOBS
 
-@app.route('/jobs/search', methods=['GET'])
+@app.route('/api/jobs/search', methods=['GET'])
 def job_search():
 
     # searches the jobs with the inputed parameters
@@ -139,7 +139,7 @@ def job_search():
 # GET JOBS BY COMPANY ID
 
 
-@app.route('/jobs/company/<int:id>')
+@app.route('/api/jobs/company/<int:id>')
 def company_jobs(id):
     jobs = Job.query.filter(Job.company_id == id).all()
     if not jobs:
@@ -149,7 +149,7 @@ def company_jobs(id):
 #     # SINGLE JOB BY ID
 
 
-@app.route('/jobs/<int:id>')
+@app.route('/api/jobs/<int:id>')
 def single_job_by_id(id):
     # Job.query.join(Companies).all()
     job = Job.query.filter(Job.job_id == id).join(Companies).first()

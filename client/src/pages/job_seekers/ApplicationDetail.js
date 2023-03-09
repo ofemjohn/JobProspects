@@ -1,21 +1,6 @@
 import React from "react";
 import { Box, Typography, Button, Grid, Paper } from "@mui/material";
 import { GetApp } from "@mui/icons-material";
-import axios from "axios";
-
-const downloadFile = async (url) => {
-  try {
-    const response = await axios.get(url, { responseType: "blob" });
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "filename.pdf");
-    document.body.appendChild(link);
-    link.click();
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 const ApplicationDetail = (props) => {
   //   const classes = useStyles();

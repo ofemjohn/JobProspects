@@ -53,7 +53,7 @@ const CreateJob = () => {
     event.preventDefault();
     console.log(formData);
     try {
-      const response = await Axios.post("/jobs/post", { ...formData });
+      const response = await Axios.post("/api/jobs/post", { ...formData });
       console.log(response);
       setMessage({ msg: response.data.message, type: "success" });
       setFormData(initialFormState);

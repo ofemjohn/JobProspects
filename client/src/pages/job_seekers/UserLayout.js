@@ -5,11 +5,9 @@ import {
   HomeRepairService,
   WorkHistory,
   Forum,
-  Logout,
 } from "@mui/icons-material";
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Header from "../../componets/header/Header";
 import SideBar from "../../componets/sidebar.js/SideBar";
 
 const sideBarLinks = [

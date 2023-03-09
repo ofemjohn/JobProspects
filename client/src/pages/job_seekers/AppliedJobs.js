@@ -22,7 +22,7 @@ function AppliedJobs({ setSelectedApplication }) {
   // JOB APPLICATION FETCH
   const fetchApplication = async () => {
     try {
-      const response = await axios.get(`/user/jobs/${user.userId}`);
+      const response = await axios.get(`/api/user/jobs/${user.userId}`);
       setAppliedJobs(response.data);
       console.log(response);
     } catch (error) {

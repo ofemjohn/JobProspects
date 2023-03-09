@@ -37,7 +37,7 @@ const UserProfile = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await Axios.get(`/user/${parseInt(userId)}`, {
+      const response = await Axios.get(`/api/user/${parseInt(userId)}`, {
         credentials: "include",
       });
 

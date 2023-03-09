@@ -25,7 +25,7 @@ def allowed_file(filename):
 # CREATE JOB APPLICATION
 
 
-@app.route('/jobs/apply', methods=['POST'])
+@app.route('/api/jobs/apply', methods=['POST'])
 def create_jobApplication():
     user_id = request.form['user_id']
     job_id = request.form['job_id']
@@ -68,7 +68,7 @@ def create_jobApplication():
 # GET ALL APPLICATIONS
 
 
-@app.route('/jobs/applications', methods=['GET'])
+@app.route('/api/jobs/applications', methods=['GET'])
 def applications():
     applications = Application.query.all()
     if not applications:
@@ -77,7 +77,7 @@ def applications():
 
 
 # GET USER JOB APPLICATIONS
-@app.route('/user/jobs/<int:id>', methods=['GET'])
+@app.route('/api/user/jobs/<int:id>', methods=['GET'])
 def user_applications(id):
     applications = Application.query.filter(
         Application.user_id == id).join(Job).all()
@@ -101,7 +101,7 @@ def user_applications(id):
 # FETCH  APPLICATIONS RELATED TO A COMPANY
 
 
-@app.route("/company/applications/<int:id>", methods=["GET"])
+@app.route("/api/company/applications/<int:id>", methods=["GET"])
 def company_applications(id):
     applications = Application.query.all()
     company_apps = []
@@ -125,7 +125,7 @@ def company_applications(id):
 
 
 # SINGLE APPLICATION BY APPLICATION ID
-@app.route('/applications/<int:id>', methods=['GET'])
+@app.route('/api/applications/<int:id>', methods=['GET'])
 def get_application(id):
     application = Application.query.filter(
         Application.application_id == id).first()
@@ -141,7 +141,7 @@ def get_application(id):
 # UPDATE APPLICATION STATUS
 
 
-@app.route("/application/<int:id>", methods=["PUT"])
+@app.route("/api/application/<int:id>", methods=["PUT"])
 def application_status_update(id):
     status = request.json.get('status')
     application = Application.query.filter(

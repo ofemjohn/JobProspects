@@ -50,7 +50,7 @@ function JobSearchPage({ setOpenLogin, setType }) {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const response = await Axios.get("/jobs/search", {
+        const response = await Axios.get("/api/jobs/search", {
           params: searchParams,
         });
         console.log(response);

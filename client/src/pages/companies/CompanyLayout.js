@@ -1,9 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@mui/material/styles";
 import { AppBar, Tabs, Tab, Typography, Box } from "@mui/material";
-import CompanyDashboard from "./CompanyDashboard";
 import { FactCheck, Group, Home, Note, Settings } from "@mui/icons-material";
 import { Link, Outlet } from "react-router-dom";
 

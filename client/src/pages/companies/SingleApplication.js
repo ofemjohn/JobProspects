@@ -8,7 +8,6 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -21,7 +20,7 @@ const SingleApplication = () => {
   //   FETCH APPLICATION
   const fetchApplication = async () => {
     try {
-      const response = await axios.get(`/applications/${id}`);
+      const response = await axios.get(`/api/applications/${id}`);
       console.log(response.data);
       setApplication(response.data);
     } catch (error) {
@@ -39,7 +38,7 @@ const SingleApplication = () => {
   const updateStatus = async () => {
     if (status) {
       try {
-        const response = await axios.put(`/application/${id}`, {
+        const response = await axios.put(`/api/application/${id}`, {
           status: status,
         });
         console.log(response.data.message);

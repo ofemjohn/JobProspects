@@ -10,7 +10,7 @@ with app.app_context():
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 
-@app.route('/')
+@app.route('/api')
 def index():
     return 'test'
 

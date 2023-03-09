@@ -4,11 +4,9 @@ import {
   Grid,
   Input,
   InputLabel,
-  Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -60,7 +58,7 @@ const RegisterPage = ({ setOpen, setType }) => {
 
       try {
         const response = await axios.post(
-          "/companies/auth/register",
+          "/api/companies/auth/register",
           formData,
           {
             headers: {

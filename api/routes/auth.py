@@ -38,7 +38,7 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/auth/register', methods=['POST'])
+@app.route('/api/auth/register', methods=['POST'])
 def register_user():
     user_data = request.json
     first_name = user_data.get('first_name')
@@ -74,7 +74,7 @@ def register_user():
 
 
 # LOGIN ROUTE
-@app.route('/auth/login', methods=['POST'])
+@app.route('/api/auth/login', methods=['POST'])
 @cross_origin()
 def login():
     login_data = request.json
@@ -107,7 +107,7 @@ def login():
 # LOGOUT ROUTE
 
 
-@app.route("/auth/logout", methods=["POST"])
+@app.route("/api/auth/logout", methods=["POST"])
 def logout_with_cookies():
     response = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(response)
@@ -115,7 +115,7 @@ def logout_with_cookies():
 
 
 # COMPANIES AUTH
-@app.route("/companies/auth/register", methods=["POST"])
+@app.route("/api/companies/auth/register", methods=["POST"])
 def register_company():
     company_data = request.form
     company_name = company_data.get("name")
@@ -160,7 +160,7 @@ def register_company():
 
 
 # COMPANY LOGIN
-@app.route('/companies/auth/login', methods=['POST'])
+@app.route('/api/companies/auth/login', methods=['POST'])
 def company_login():
     login_data = request.json
     email = login_data.get('email')

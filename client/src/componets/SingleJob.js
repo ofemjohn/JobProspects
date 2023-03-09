@@ -65,7 +65,7 @@ function SingleJob({ selectedJob, onClose, setOpenLogin, setType }) {
       formData.append("file", application.file);
 
       try {
-        const response = await Axios.post("/jobs/apply", formData, {
+        const response = await Axios.post("/api/jobs/apply", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

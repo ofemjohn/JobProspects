@@ -1,6 +1,5 @@
 import { Visibility } from "@mui/icons-material";
 import {
-  FormControlLabel,
   Grid,
   IconButton,
   Table,
@@ -41,9 +40,9 @@ const JobApplications = () => {
 
   const handleVisibility = async (id) => {
     try {
-      const res = await axios.get(`/applications/${id}`);
+      const res = await axios.get(`/api/applications/${id}`);
       if (res.data.application.application_status == "pending") {
-        const response = await axios.put(`/application/${id}`, {
+        const response = await axios.put(`/api/application/${id}`, {
           status: "Application Under Review",
         });
 

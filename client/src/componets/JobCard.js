@@ -35,7 +35,7 @@ function JobCard({ job, setSelectedJob, setOpen }) {
   const handleApply = async (id) => {
     if (id) {
       try {
-        const response = await Axios.get(`/jobs/${id}`);
+        const response = await Axios.get(`/api/jobs/${id}`);
         setSelectedJob(response.data);
         setOpen(true);
       } catch (error) {

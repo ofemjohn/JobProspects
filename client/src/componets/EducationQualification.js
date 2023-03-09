@@ -21,14 +21,7 @@ import {
   Paper,
   IconButton,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { Delete, Edit } from "@mui/icons-material";
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
 
 const educationAwards = ["Masters", "Bachelor", "Diploma", "Certificate"];
 const grades = {

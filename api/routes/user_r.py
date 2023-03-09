@@ -4,7 +4,7 @@ from models.user_m import User, Profile, Education, EmploymentHistory
 from flask_jwt_extended import jwt_required
 
 
-@app.route('/users', methods=['GET'])
+@app.route('/api/users', methods=['GET'])
 def get_users():
     users = User.query.all()
     # return jsonify({'user': users})
@@ -12,7 +12,7 @@ def get_users():
 # GET A SINGLE USER
 
 
-@app.route('/user/<int:id>', methods=['GET'])
+@app.route('/api/user/<int:id>', methods=['GET'])
 @jwt_required()
 def get_user(id):
     user = User.query.filter(User.user_id == id).first()
@@ -22,7 +22,7 @@ def get_user(id):
 # SINGLE USER UPDATE DETAILS
 
 
-@app.route('/user/<int:id>', methods=['PUT'])
+@app.route('/api/user/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_user(id):
     user_data = request.form
@@ -37,7 +37,7 @@ def update_user(id):
 # DELETE INDIVIDUAL ACCOUNT
 
 
-@app.route("/user/<int:id>", methods=["DELETE"])
+@app.route("/api/user/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_account(id):
     user = User.query.filter(User.user_id == id).first()

@@ -26,7 +26,7 @@ const CompanyJobs = () => {
     // Fetch jobs by company id and update state
     const fetchJobs = async () => {
       try {
-        const response = await Axios.get(`/jobs/company/${user.companyId}`);
+        const response = await Axios.get(`/api/jobs/company/${user.companyId}`);
 
         if (response.status === 200) {
           const data = response.data;
