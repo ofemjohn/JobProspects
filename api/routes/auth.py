@@ -19,14 +19,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 # Register new user
 
-# Config
-cloudinary.config(
-    cloud_name="brayohmurithi",
-    api_key="273368127559497",
-    api_secret="Ypg4Y3dB94Edyc2DYXKYjqnlNAw",
-    secure=True
-)
-
 
 ALLOWED_EXTENSIONS = {'jpeg', 'jpg', 'png'}
 
